@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>忘记密码 - 街舞网站</title>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .login-form {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .login-form h2 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 20px;
+        }
+        
+        .login-form p {
+            margin-bottom: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #888;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background-color: #8B4513;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #6B3410;
+        }
+        
+        .form-links {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .form-links a {
+            color: #888;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+        
+        .form-links a:hover {
+            color: #333;
+        }
+        
+        .form-links .register-btn {
+            background-color: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .form-links .register-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .success-message {
+            background-color: #e8f5e8;
+            color: #2e7d32;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .login-form {
+                padding: 30px 20px;
+            }
+            
+            .container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">IN ONE</div>
+        </div>
+        
+        <div class="login-form">
+            <h2>忘记密码</h2>
+            <p>输入您的邮箱地址，我们将发送重置密码的链接</p>
+            
+            <% if resource.errors.any? %>
+            <div class="error-message">
+                <%= resource.errors.full_messages.first %>
+            </div>
+            <% elsif notice %>
+            <div class="success-message">
+                <%= notice %>
+            </div>
+            <% end %>
+            
+            <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, id: 'password-reset-form' }) do |f| %>
+                <div class="form-group">
+                    <label for="<%= resource_name %>_email">邮箱</label>
+                    <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "请输入注册时使用的邮箱", class: "form-control" %>
+                </div>
+                
+                <%= f.submit "发送重置密码链接", class: "btn-primary" %>
+                
+                <div class="form-links">
+                    <%= link_to "返回登录", new_session_path(resource_name), class: "register-btn" %>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</body>
+</html>

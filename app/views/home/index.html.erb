@@ -1,0 +1,1123 @@
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+        
+        .navbar.scrolled {
+            background-color: rgba(0, 0, 0, 0.95);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-menu li {
+            margin-left: 30px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            color: #ff6b6b;
+        }
+        
+        .user-area {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-area a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .user-area a:hover {
+            color: #ff6b6b;
+        }
+        
+        .login-btn {
+            background-color: #8B4513;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .login-btn:hover {
+            background-color: #6B3410;
+        }
+        
+        .user-dropdown {
+            position: relative;
+            margin-left: 20px;
+            display: inline-block;
+            z-index: 1001;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ff6b6b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            color: #000;
+            min-width: 120px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            padding: 5px 0;
+            margin-top: 5px;
+            visibility: hidden;
+            opacity: 0;
+            z-index: 9999;
+            overflow: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+            pointer-events: none;
+        }
+        
+        .dropdown-menu.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .user-avatar-large {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            margin-right: 12px;
+        }
+        
+        .user-details {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .user-email {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .menu-divider {
+            height: 1px;
+            background-color: #f0f0f0;
+        }
+        
+        .dropdown-menu .menu-item {
+            display: block;
+            padding: 8px 16px;
+            color: #000 !important;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+            margin: 0;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        
+        .dropdown-menu .menu-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .dropdown-menu form {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .logout-btn {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            color: #000;
+            text-decoration: none;
+            font-size: 14px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        
+        .logout-btn:hover {
+            background-color: #f5f5f5;
+        }
+        
+        /* 轮播图 */
+        .carousel {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        
+        .carousel-slide.active {
+            opacity: 1;
+        }
+        
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .carousel-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            z-index: 10;
+        }
+        
+        .carousel-content h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .carousel-content p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .carousel-btn {
+            background-color: #8B4513;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .carousel-btn:hover {
+            background-color: #6B3410;
+        }
+        
+        .carousel-indicators {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .indicator.active {
+            background-color: white;
+        }
+        
+        /* 街舞分类展示区 */
+        .categories {
+            padding: 80px 20px;
+            background-color: #f9f9f9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title h2 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .section-title p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .category-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .category-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .category-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .category-card:hover .category-image img {
+            transform: scale(1.05);
+        }
+        
+        .category-content {
+            padding: 20px;
+        }
+        
+        .category-content h3 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .category-content p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .category-btn {
+            display: inline-block;
+            background-color: #8B4513;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .category-btn:hover {
+            background-color: #6B3410;
+        }
+        
+        /* 最新活动/课程展示模块 */
+        .events {
+            padding: 80px 20px;
+            background-color: white;
+        }
+        
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .event-card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .event-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .event-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .event-card:hover .event-image img {
+            transform: scale(1.05);
+        }
+        
+        .event-content {
+            padding: 20px;
+        }
+        
+        .event-date {
+            font-size: 14px;
+            color: #8B4513;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .event-content h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .event-content p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .event-location {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 15px;
+        }
+        
+        .event-btn {
+            display: inline-block;
+            background-color: #8B4513;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .event-btn:hover {
+            background-color: #6B3410;
+        }
+        
+        /* 页脚 */
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 60px 20px 30px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #ff6b6b;
+        }
+        
+        .footer-column p {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: #ff6b6b;
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #ccc;
+        }
+        
+        /* 关于我们 */
+        .about {
+            padding: 80px 20px;
+            background-color: #f9f9f9;
+        }
+        
+        .about-content {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-text h3 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 15px;
+            margin-top: 30px;
+        }
+        
+        .about-text p {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .about-image {
+            flex: 1;
+            max-width: 500px;
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .carousel-content h1 {
+                font-size: 32px;
+            }
+            
+            .carousel-content p {
+                font-size: 16px;
+            }
+            
+            .section-title h2 {
+                font-size: 28px;
+            }
+            
+            .categories,
+            .events,
+            .about {
+                padding: 60px 20px;
+            }
+            
+            .about-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .about-image {
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .carousel-content h1 {
+                font-size: 24px;
+            }
+            
+            .carousel-content p {
+                font-size: 14px;
+            }
+            
+            .section-title h2 {
+                font-size: 24px;
+            }
+            
+            .categories-grid,
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+  </style>
+    <!-- 导航栏 -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">IN ONE</a>
+            
+            <ul class="nav-menu">
+                <li><a href="#home">首页</a></li>
+                <li><a href="#categories">街舞分类</a></li>
+                <li><a href="#events">最新活动</a></li>
+                <li><a href="#about">关于我们</a></li>
+                <li><a href="#contact">联系我们</a></li>
+            </ul>
+            
+            <div class="user-area" id="user-area">
+                <!-- 未登录状态 -->
+                <% if !user_signed_in? %>
+                <div id="guest-state">
+                    <a href="<%= new_user_registration_path %>">注册</a>
+                    <a href="<%= new_user_session_path %>" class="login-btn">登录</a>
+                </div>
+                <% else %>
+                <!-- 已登录状态 -->
+                <div id="user-state">
+                    <div class="user-dropdown">
+                        <div class="user-avatar" id="user-avatar"><%= current_user.email.first.upcase %></div>
+                        <div class="dropdown-menu">
+                            <div class="user-info">
+                                <div class="user-avatar-large"><%= current_user.email.first.upcase %></div>
+                                <div class="user-details">
+                                    <div class="user-name"><%= current_user.email.split('@').first %></div>
+                                    <div class="user-email"><%= current_user.email %></div>
+                                </div>
+                            </div>
+                            <div class="menu-divider"></div>
+                            <a href="<%= user_profile_path %>" class="menu-item">个人中心</a>
+                            <a href="<%= user_courses_path %>" class="menu-item">我的课程</a>
+                            <div class="menu-divider"></div>
+                            <%= form_for(current_user, as: :user, url: destroy_user_session_path, method: :delete) do |f| %>
+                                <button type="submit" class="menu-item logout-btn">退出登录</button>
+                            <% end %>
+                        </div>
+                    </div>
+                </div>
+                <% end %>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 轮播图 -->
+    <section class="carousel" id="home">
+        <div class="carousel-slide active">
+            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=hip%20hop%20dancers%20performing%20in%20urban%20setting%2C%20dynamic%20movement%2C%20vibrant%20colors%2C%20professional%20photography&image_size=landscape_16_9" alt="街舞表演">
+            <div class="carousel-content">
+                <h1>释放你的街舞激情</h1>
+                <p>加入我们的街舞社区，展示你的才华，结识志同道合的朋友</p>
+                <button class="carousel-btn">立即加入</button>
+            </div>
+        </div>
+        
+        <div class="carousel-slide">
+            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=breakdancers%20in%20street%20battle%2C%20intense%20competition%2C%20urban%20background%2C%20high%20energy&image_size=landscape_16_9" alt="街舞比赛">
+            <div class="carousel-content">
+                <h1>参与精彩的街舞比赛</h1>
+                <p>展示你的技巧，与顶尖舞者一较高下，赢取丰厚奖励</p>
+                <button class="carousel-btn">查看比赛</button>
+            </div>
+        </div>
+        
+        <div class="carousel-slide">
+            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=hip%20hop%20dance%20class%2C%20professional%20instructor%2C%20students%20learning%2C%20modern%20studio&image_size=landscape_16_9" alt="街舞课程">
+            <div class="carousel-content">
+                <h1>专业街舞课程</h1>
+                <p>由资深导师授课，从基础到进阶，全方位提升你的舞技</p>
+                <button class="carousel-btn">报名课程</button>
+            </div>
+        </div>
+        
+        <div class="carousel-indicators">
+            <div class="indicator active" onclick="goToSlide(0)"></div>
+            <div class="indicator" onclick="goToSlide(1)"></div>
+            <div class="indicator" onclick="goToSlide(2)"></div>
+        </div>
+    </section>
+    
+    <!-- 街舞分类展示区 -->
+    <section class="categories" id="categories">
+        <div class="container">
+            <div class="section-title">
+                <h2>街舞分类</h2>
+                <p>探索不同风格的街舞，找到适合你的舞种</p>
+            </div>
+            
+            <div class="categories-grid">
+                <div class="category-card">
+                    <div class="category-image">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=breakdancing%20powermoves%2C%20acrobatics%2C%20urban%20style%2C%20dynamic%20pose&image_size=square" alt="Breaking">
+                    </div>
+                    <div class="category-content">
+                        <h3>Breaking</h3>
+                        <p>以力量和技巧为特色的街舞风格，包含地板动作、定格和 powermoves</p>
+                        <a href="#" class="category-btn">了解更多</a>
+                    </div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-image">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=popping%20dancer%20isolating%20body%20parts%2C%20robot%20style%2C%20smooth%20movements&image_size=square" alt="Popping">
+                    </div>
+                    <div class="category-content">
+                        <h3>Popping</h3>
+                        <p>通过肌肉的快速收缩和放松，创造出机械感和震动效果的舞蹈风格</p>
+                        <a href="#" class="category-btn">了解更多</a>
+                    </div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-image">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=locking%20dancer%20with%20pointed%20fingers%2C%20funky%20style%2C%20vintage%20clothing&image_size=square" alt="Locking">
+                    </div>
+                    <div class="category-content">
+                        <h3>Locking</h3>
+                        <p>以快速的手臂动作和突然的定格为特色，充满乐趣和表现力的舞蹈风格</p>
+                        <a href="#" class="category-btn">了解更多</a>
+                    </div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-image">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=hip%20hop%20dancer%20freestyling%2C%20urban%20streetwear%2C%20confident%20pose&image_size=square" alt="Hip Hop">
+                    </div>
+                    <div class="category-content">
+                        <h3>Hip Hop</h3>
+                        <p>最具代表性的街舞风格，融合了各种元素，强调自由表达和个人风格</p>
+                        <a href="#" class="category-btn">了解更多</a>
+                    </div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-image">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=waacking%20dancer%20with%20dramatic%20arm%20movements%2C%20disco%20style%2C%20energetic%20expression&image_size=square" alt="Waacking">
+                    </div>
+                    <div class="category-content">
+                        <h3>Waacking</h3>
+                        <p>以夸张的手臂动作和表演性为特色，源自70年代迪斯科文化的舞蹈风格</p>
+                        <a href="#" class="category-btn">了解更多</a>
+                    </div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-image">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=krumping%20dancer%20with%20intense%20facial%20expression%2C%20aggressive%20movements%2C%20urban%20background&image_size=square" alt="Krumping">
+                    </div>
+                    <div class="category-content">
+                        <h3>Krumping</h3>
+                        <p>以强烈的表现力和情感释放为特色，充满力量和速度的舞蹈风格</p>
+                        <a href="#" class="category-btn">了解更多</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 最新活动/课程展示模块 -->
+    <section class="events" id="events">
+        <div class="container">
+            <div class="section-title">
+                <h2>最新活动</h2>
+                <p>查看我们即将举行的街舞活动和课程</p>
+            </div>
+            
+            <div class="events-grid">
+                <div class="event-card">
+                    <div class="event-image">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=hip%20hop%20battle%20competition%2C%20stage%20lighting%2C%20crowd%20cheering%2C%20professional%20event&image_size=landscape_4_3" alt="街舞比赛">
+                    </div>
+                    <div class="event-content">
+                        <div class="event-date">2026年3月15日</div>
+                        <h3>2026年春季街舞大赛</h3>
+                        <p>一场汇聚顶尖舞者的盛宴，展示最精彩的街舞技巧和创意</p>
+                        <div class="event-location">地点：城市中心体育馆</div>
+                        <a href="#" class="event-btn">报名参加</a>
+                    </div>
+                </div>
+                
+                <div class="event-card">
+                    <div class="event-image">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=hip%20hop%20workshop%20with%20international%20instructor%2C%20students%20learning%2C%20modern%20studio&image_size=landscape_4_3" alt="大师 workshop">
+                    </div>
+                    <div class="event-content">
+                        <div class="event-date">2026年3月20日</div>
+                        <h3>国际大师街舞工作坊</h3>
+                        <p>邀请国际知名街舞大师，带来最前沿的舞蹈技巧和理念</p>
+                        <div class="event-location">地点：IN ONE 街舞工作室</div>
+                        <a href="#" class="event-btn">预约席位</a>
+                    </div>
+                </div>
+                
+                <div class="event-card">
+                    <div class="event-image">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=hip%20hop%20showcase%20performance%2C%20stage%20production%2C%20colorful%20lights%2C%20professional%20dancers&image_size=landscape_4_3" alt="街舞表演">
+                    </div>
+                    <div class="event-content">
+                        <div class="event-date">2026年3月25日</div>
+                        <h3>IN ONE 街舞团年度公演</h3>
+                        <p>展示我们学员和教师的精彩表演，呈现最专业的街舞作品</p>
+                        <div class="event-location">地点：城市大剧院</div>
+                        <a href="#" class="event-btn">购票观看</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 关于我们 -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>关于我们</h2>
+                <p>了解IN ONE街舞工作室的发展历程和教学理念</p>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>我们的使命</h3>
+                    <p>IN ONE街舞工作室成立于2010年，是一家专业的街舞培训机构，致力于推广街舞文化，培养优秀的街舞人才。我们的使命是通过专业的教学和优质的服务，让每个人都能享受街舞的魅力，发现自己的潜能。</p>
+                    
+                    <h3>教学理念</h3>
+                    <p>我们坚持"以学生为中心"的教学理念，根据每个学生的特点和需求，制定个性化的学习计划。我们的教师团队由经验丰富的专业舞者组成，他们不仅拥有扎实的舞蹈技巧，还具备丰富的教学经验，能够帮助学生快速提升舞技。</p>
+                    
+                    <h3>发展历程</h3>
+                    <p>2010年：IN ONE街舞工作室成立，开始提供街舞培训服务<br>
+                    2012年：开设第一家分店，扩大服务范围<br>
+                    2015年：举办第一届街舞大赛，推动街舞文化发展<br>
+                    2018年：与国际街舞大师合作，引入国际先进教学理念<br>
+                    2020年：推出在线课程，满足更多学员的需求<br>
+                    2023年：成为国内知名的街舞培训机构，培养了众多优秀的街舞人才<br>
+                    2026年：继续扩大规模，推广街舞文化，为更多人提供专业的街舞培训服务</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=hip%20hop%20dance%20studio%2C%20modern%20facility%2C%20professional%20equipment%2C%20students%20practicing&image_size=landscape_4_3" alt="IN ONE街舞工作室">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 页脚 -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>IN ONE</h3>
+                    <p>专业的街舞培训机构，致力于推广街舞文化，培养优秀的街舞人才。我们提供最专业的课程和最优质的服务，让每个人都能享受街舞的魅力。</p>
+                    <div class="social-links">
+                        <a href="#">📘</a>
+                        <a href="#">📱</a>
+                        <a href="#">📷</a>
+                        <a href="#">🎵</a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="#home">首页</a></li>
+                        <li><a href="#categories">街舞分类</a></li>
+                        <li><a href="#events">最新活动</a></li>
+                        <li><a href="#about">关于我们</a></li>
+                        <li><a href="#contact">联系我们</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>联系我们</h3>
+                    <p>地址：北京市朝阳区建国路88号</p>
+                    <p>电话：010-12345678</p>
+                    <p>邮箱：info@inone.com</p>
+                    <p>营业时间：周一至周日 10:00-22:00</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>订阅我们</h3>
+                    <p>订阅我们的 newsletters，获取最新的活动信息和课程优惠</p>
+                    <form>
+                        <input type="email" id="subscribe-email" name="subscribe-email" placeholder="请输入您的邮箱" style="width: 100%; padding: 10px; margin-top: 10px; border-radius: 4px; border: none;">
+                        <button type="submit" id="subscribe-button" name="subscribe-button" style="width: 100%; padding: 10px; margin-top: 10px; background-color: #8B4513; color: white; border: none; border-radius: 4px; cursor: pointer;">订阅</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 IN ONE 街舞. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script data-turbolinks-eval="false">
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (navbar && window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else if (navbar) {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // 轮播图功能
+        function initCarousel() {
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.carousel-slide');
+            const indicators = document.querySelectorAll('.indicator');
+            
+            if (slides.length === 0 || indicators.length === 0) return;
+            
+            function showSlide(index) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                indicators.forEach(indicator => indicator.classList.remove('active'));
+                
+                slides[index].classList.add('active');
+                indicators[index].classList.add('active');
+                currentSlide = index;
+            }
+            
+            window.goToSlide = function(index) {
+                showSlide(index);
+            };
+            
+            function nextSlide() {
+                let next = currentSlide + 1;
+                if (next >= slides.length) next = 0;
+                showSlide(next);
+            }
+            
+            // 自动轮播
+            setInterval(nextSlide, 5000);
+        }
+        
+        // 平滑滚动
+        function initSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                // 跳过退出登录链接
+                if (anchor.id === 'logout-link') {
+                    return;
+                }
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    // 跳过href只是"#"的链接
+                    if (href === '#') {
+                        return;
+                    }
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+        
+        // 下拉菜单控制
+        function initUserDropdown() {
+            const userDropdown = document.querySelector('.user-dropdown');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            let isOpenByClick = false;
+            let hoverTimeout;
+            
+            if (userDropdown && dropdownMenu) {
+                // 确保用户头像可聚焦
+                userDropdown.setAttribute('tabindex', '0');
+                userDropdown.setAttribute('role', 'button');
+                userDropdown.setAttribute('aria-haspopup', 'true');
+                userDropdown.setAttribute('aria-expanded', 'false');
+                
+                // 定义事件处理函数
+                function handleClick(e) {
+                    e.stopPropagation();
+                    isOpenByClick = !isOpenByClick;
+                    dropdownMenu.classList.toggle('show');
+                    userDropdown.setAttribute('aria-expanded', dropdownMenu.classList.contains('show'));
+                }
+                
+                function handleMouseEnter() {
+                    clearTimeout(hoverTimeout);
+                    if (!isOpenByClick) {
+                        dropdownMenu.classList.add('show');
+                        userDropdown.setAttribute('aria-expanded', 'true');
+                    }
+                }
+                
+                function handleMouseLeave() {
+                    if (!isOpenByClick) {
+                        hoverTimeout = setTimeout(() => {
+                            dropdownMenu.classList.remove('show');
+                            userDropdown.setAttribute('aria-expanded', 'false');
+                        }, 200);
+                    }
+                }
+                
+                function handleClickOutside(e) {
+                    if (!userDropdown.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                        isOpenByClick = false;
+                        userDropdown.setAttribute('aria-expanded', 'false');
+                    }
+                }
+                
+                function handleKeyDown(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleClick(e);
+                    } else if (e.key === 'Escape') {
+                        dropdownMenu.classList.remove('show');
+                        isOpenByClick = false;
+                        userDropdown.setAttribute('aria-expanded', 'false');
+                    }
+                }
+                
+                // 添加事件监听器
+                userDropdown.addEventListener('click', handleClick);
+                userDropdown.addEventListener('mouseenter', handleMouseEnter);
+                userDropdown.addEventListener('mouseleave', handleMouseLeave);
+                dropdownMenu.addEventListener('mouseenter', handleMouseEnter);
+                dropdownMenu.addEventListener('mouseleave', handleMouseLeave);
+                userDropdown.addEventListener('keydown', handleKeyDown);
+                document.addEventListener('click', handleClickOutside);
+            }
+        }
+        
+        // 退出登录功能
+        function initLogout() {
+            // 直接在DOM中查找退出登录按钮，确保即使在动态加载的内容中也能找到
+            const logoutBtn = document.querySelector('.logout-btn');
+            const logoutForm = document.querySelector('.dropdown-menu form');
+            
+            if (logoutBtn && logoutForm) {
+                // 定义事件处理函数
+                function handleLogoutClick(e) {
+                    // 阻止事件冒泡，确保不会触发userDropdown的点击事件
+                    e.stopPropagation();
+                    
+                    // 提交表单，使用表单的默认行为
+                    logoutForm.submit();
+                }
+                
+                // 添加点击事件监听器
+                logoutBtn.addEventListener('click', handleLogoutClick);
+            }
+        }
+        
+        // 初始化所有功能
+        function initPage() {
+            initCarousel();
+            initSmoothScroll();
+            initUserDropdown();
+            initLogout();
+        }
+        
+        // 同时支持传统页面加载和Turbolinks
+        document.addEventListener('DOMContentLoaded', initPage);
+        document.addEventListener('turbolinks:load', initPage);
+    </script>

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>编辑课程 - 街舞网站</title>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f5f7fa;
+    }
+    
+    /* 导航栏 */
+    .navbar {
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 15px 0;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        transition: background-color 0.3s;
+    }
+    
+    .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .logo {
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+        text-decoration: none;
+    }
+    
+    .nav-menu {
+        display: flex;
+        list-style: none;
+    }
+    
+    .nav-menu li {
+        margin-left: 30px;
+    }
+    
+    .nav-menu a {
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.3s;
+    }
+    
+    .nav-menu a:hover {
+        color: #ff6b6b;
+    }
+    
+    .user-area {
+        display: flex;
+        align-items: center;
+    }
+    
+    .user-area a {
+        color: white;
+        text-decoration: none;
+        margin-left: 20px;
+        font-size: 14px;
+        transition: color 0.3s;
+    }
+    
+    .user-area a:hover {
+        color: #ff6b6b;
+    }
+    
+    .login-btn {
+        background-color: #8B4513;
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+    
+    .login-btn:hover {
+        background-color: #6B3410;
+    }
+    
+    .user-dropdown {
+        position: relative;
+        margin-left: 20px;
+        display: inline-block;
+        z-index: 1001;
+        cursor: pointer;
+    }
+    
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #ff6b6b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+    
+    .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            color: #000;
+            min-width: 120px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            padding: 5px 0;
+            margin-top: 5px;
+            visibility: hidden;
+            opacity: 0;
+            z-index: 9999;
+            overflow: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+            pointer-events: none;
+        }
+    
+    .dropdown-menu.show {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+    
+    .user-info {
+        display: flex;
+        align-items: center;
+        padding: 16px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .user-avatar-large {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: #3498db;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 20px;
+        margin-right: 12px;
+    }
+    
+    .user-details {
+        flex: 1;
+    }
+    
+    .user-name {
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+    
+    .user-email {
+        font-size: 12px;
+        color: #666;
+    }
+    
+    .menu-divider {
+        height: 1px;
+        background-color: #f0f0f0;
+    }
+    
+    .dropdown-menu .menu-item {
+            display: block;
+            padding: 8px 16px;
+            color: #000 !important;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+            margin: 0;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        
+        .dropdown-menu .menu-item:hover {
+            background-color: #f5f5f5;
+        }
+    
+    .dropdown-menu form {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .logout-btn {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            color: #000;
+            text-decoration: none;
+            font-size: 14px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        
+        .logout-btn:hover {
+            background-color: #f5f5f5;
+        }
+    
+    /* 个人中心容器 */
+    .profile-container {
+        max-width: 1000px;
+        margin: 100px auto 50px;
+        padding: 0 20px;
+    }
+    
+    .profile-header {
+        background-color: white;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    .profile-header h1 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 28px;
+    }
+    
+    .profile-header p {
+        color: #666;
+        font-size: 16px;
+    }
+    
+    /* 个人中心内容 */
+    .profile-content {
+        display: flex;
+        gap: 30px;
+    }
+    
+    /* 侧边导航 */
+    .profile-sidebar {
+        flex: 0 0 200px;
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .profile-sidebar h3 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    
+    .profile-nav {
+        list-style: none;
+    }
+    
+    .profile-nav li {
+        margin-bottom: 10px;
+    }
+    
+    .profile-nav a {
+        display: block;
+        padding: 10px 15px;
+        color: #666;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: all 0.3s;
+    }
+    
+    .profile-nav a:hover {
+        background-color: #f5f7fa;
+        color: #8B4513;
+    }
+    
+    .profile-nav a.active {
+        background-color: #8B4513;
+        color: white;
+    }
+    
+    /* 主内容区 */
+    .profile-main {
+        flex: 1;
+        background-color: white;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .section-title {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 20px;
+        border-bottom: 2px solid #8B4513;
+        padding-bottom: 10px;
+    }
+    
+    /* 表单样式 */
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #666;
+        font-size: 14px;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+        font-family: inherit;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #888;
+    }
+    
+    .form-group textarea {
+        resize: vertical;
+        min-height: 150px;
+    }
+    
+    .error-message {
+        background-color: #ffebee;
+        color: #c62828;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    
+    .error-field {
+        border-color: #c62828 !important;
+    }
+    
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-decoration: none;
+    }
+    
+    .btn-primary {
+        background-color: #8B4513;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background-color: #6B3410;
+    }
+    
+    .btn-secondary {
+        background-color: #f0f0f0;
+        color: #333;
+        margin-right: 10px;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #e0e0e0;
+    }
+    
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+        .profile-content {
+            flex-direction: column;
+        }
+        
+        .profile-sidebar {
+            flex: 1;
+        }
+        
+        .nav-menu {
+            display: none;
+        }
+    }
+  </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="<%= root_path %>" class="logo">IN ONE</a>
+            
+            <ul class="nav-menu">
+                <li><a href="<%= root_path %>#home">首页</a></li>
+                <li><a href="<%= root_path %>#categories">街舞分类</a></li>
+                <li><a href="<%= root_path %>#events">最新活动</a></li>
+                <li><a href="<%= root_path %>#about">关于我们</a></li>
+                <li><a href="<%= root_path %>#contact">联系我们</a></li>
+            </ul>
+            
+            <div class="user-area" id="user-area">
+                <!-- 已登录状态 -->
+                <div id="user-state">
+                    <div class="user-dropdown">
+                        <div class="user-avatar" id="user-avatar"><%= current_user.email.first.upcase %></div>
+                        <div class="dropdown-menu">
+                            <div class="user-info">
+                                <div class="user-avatar-large"><%= current_user.email.first.upcase %></div>
+                                <div class="user-details">
+                                    <div class="user-name"><%= current_user.email.split('@').first %></div>
+                                    <div class="user-email"><%= current_user.email %></div>
+                                </div>
+                            </div>
+                            <div class="menu-divider"></div>
+                            <a href="#" class="menu-item">切换账户</a>
+                            <div class="menu-divider"></div>
+                            <%= form_for(current_user, as: :user, url: destroy_user_session_path, method: :delete) do |f| %>
+                                <button type="submit" class="menu-item logout-btn">注销</button>
+                            <% end %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 个人中心容器 -->
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1>个人中心</h1>
+            <p>管理你的账号信息和个人资料</p>
+        </div>
+        
+        <div class="profile-content">
+            <!-- 侧边导航 -->
+            <div class="profile-sidebar">
+                <h3>账户管理</h3>
+                <ul class="profile-nav">
+                    <li><a href="<%= user_profile_path %>">个人信息</a></li>
+                    <li><a href="<%= edit_user_profile_path %>">编辑资料</a></li>
+                    <li><a href="<%= user_security_path %>">账号安全</a></li>
+                    <li><a href="<%= user_courses_path %>">我的课程</a></li>
+                </ul>
+            </div>
+            
+            <!-- 主内容区 -->
+            <div class="profile-main">
+                <h2 class="section-title">编辑课程</h2>
+                
+                <% if @course.errors.any? %>
+                <div class="error-message">
+                    <%= @course.errors.full_messages.join('<br>') %>
+                </div>
+                <% end %>
+                
+                <%= form_for(@course, as: :course, url: update_user_course_path(@course), method: :patch) do |f| %>
+                    <div class="form-group">
+                        <%= f.label :title, '课程名称' %>
+                        <%= f.text_field :title, class: 'form-control' %>
+                    </div>
+                    
+                    <div class="form-group">
+                        <%= f.label :description, '课程描述' %>
+                        <%= f.text_area :description, class: 'form-control' %>
+                    </div>
+                    
+                    <div class="form-group">
+                        <%= f.submit '更新课程', class: 'btn btn-primary' %>
+                        <%= link_to '取消', user_courses_path, class: 'btn btn-secondary' %>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+    
+    <script data-turbolinks-eval="false">
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // 下拉菜单控制
+        function initUserDropdown() {
+            const userDropdown = document.querySelector('.user-dropdown');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            let isOpenByClick = false;
+            let hoverTimeout;
+            
+            if (userDropdown && dropdownMenu) {
+                // 确保用户头像可聚焦
+                userDropdown.setAttribute('tabindex', '0');
+                userDropdown.setAttribute('role', 'button');
+                userDropdown.setAttribute('aria-haspopup', 'true');
+                userDropdown.setAttribute('aria-expanded', 'false');
+                
+                // 定义事件处理函数
+                function handleClick(e) {
+                    e.stopPropagation();
+                    isOpenByClick = !isOpenByClick;
+                    dropdownMenu.classList.toggle('show');
+                    userDropdown.setAttribute('aria-expanded', dropdownMenu.classList.contains('show'));
+                }
+                
+                function handleMouseEnter() {
+                    clearTimeout(hoverTimeout);
+                    if (!isOpenByClick) {
+                        dropdownMenu.classList.add('show');
+                        userDropdown.setAttribute('aria-expanded', 'true');
+                    }
+                }
+                
+                function handleMouseLeave() {
+                    if (!isOpenByClick) {
+                        hoverTimeout = setTimeout(() => {
+                            dropdownMenu.classList.remove('show');
+                            userDropdown.setAttribute('aria-expanded', 'false');
+                        }, 200);
+                    }
+                }
+                
+                function handleClickOutside(e) {
+                    if (!userDropdown.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                        isOpenByClick = false;
+                        userDropdown.setAttribute('aria-expanded', 'false');
+                    }
+                }
+                
+                function handleKeyDown(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleClick(e);
+                    } else if (e.key === 'Escape') {
+                        dropdownMenu.classList.remove('show');
+                        isOpenByClick = false;
+                        userDropdown.setAttribute('aria-expanded', 'false');
+                    }
+                }
+                
+                // 添加事件监听器
+                userDropdown.addEventListener('click', handleClick);
+                userDropdown.addEventListener('mouseenter', handleMouseEnter);
+                userDropdown.addEventListener('mouseleave', handleMouseLeave);
+                dropdownMenu.addEventListener('mouseenter', handleMouseEnter);
+                dropdownMenu.addEventListener('mouseleave', handleMouseLeave);
+                userDropdown.addEventListener('keydown', handleKeyDown);
+                document.addEventListener('click', handleClickOutside);
+            }
+        }
+        
+        // 退出登录功能
+        function initLogout() {
+            const logoutBtn = document.querySelector('.logout-btn');
+            const logoutForm = document.querySelector('.dropdown-menu form');
+            
+            if (logoutBtn && logoutForm) {
+                // 定义事件处理函数
+                function handleLogoutClick(e) {
+                    // 阻止事件冒泡，确保不会触发userDropdown的点击事件
+                    e.stopPropagation();
+                    
+                    // 提交表单，使用表单的默认行为
+                    logoutForm.submit();
+                }
+                
+                // 添加点击事件监听器
+                logoutBtn.addEventListener('click', handleLogoutClick);
+            }
+        }
+        
+        // 初始化所有功能
+        function initPage() {
+            initUserDropdown();
+            initLogout();
+        }
+        
+        // 同时支持传统页面加载和Turbolinks
+        document.addEventListener('DOMContentLoaded', initPage);
+        document.addEventListener('turbolinks:load', initPage);
+    </script>
+</body>
+</html>

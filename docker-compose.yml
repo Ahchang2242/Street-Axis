@@ -1,0 +1,70 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      - redis
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=mysql2://root:password@db:3306/hiphop_website_development
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY_BASE=development_secret_key_base
+    volumes:
+      - .:/app
+      - bundle:/usr/local/bundle
+    networks:
+      - hiphop_network
+    tty: true
+    stdin_open: true
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - hiphop_network
+
+  db:
+    image: mysql:8.0
+    platform: linux/amd64
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=hiphop_website_development
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    networks:
+      - hiphop_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p password"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: redis:7.0
+    platform: linux/amd64
+    volumes:
+      - redis_data:/data
+    networks:
+      - hiphop_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  bundle:
+  mysql_data:
+  redis_data:
+
+networks:
+  hiphop_network:
+    driver: bridge

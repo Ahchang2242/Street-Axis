@@ -1,0 +1,57 @@
+zh:
+  devise:
+    confirmations:
+      confirmed: "您的邮箱已成功验证。"
+      send_instructions: "您将在几分钟内收到一封验证邮箱的邮件。"
+      send_paranoid_instructions: "如果您的邮箱存在于我们的数据库中，您将在几分钟内收到一封验证邮箱的邮件。"
+    failure:
+      already_authenticated: "您已经登录。"
+      inactive: "您的账户尚未激活。"
+      invalid: "邮箱或密码错误。"
+      locked: "您的账户已被锁定。"
+      last_attempt: "您还有最后一次尝试机会，之后您的账户将被锁定。"
+      not_found_in_database: "邮箱或密码错误。"
+      timeout: "您的会话已过期，请重新登录。"
+      unauthenticated: "您需要登录或注册才能继续。"
+      unconfirmed: "您需要验证您的邮箱才能继续。"
+    mailer:
+      confirmation_instructions:
+        subject: "验证邮箱"
+      reset_password_instructions:
+        subject: "重置密码"
+      unlock_instructions:
+        subject: "解锁账户"
+    omniauth_callbacks:
+      failure: "无法从 %{kind} 授权，因为 '%{reason}'。"
+      success: "成功从 %{kind} 授权。"
+    passwords:
+      no_token: "您必须通过重置密码的邮件链接访问此页面。"
+      send_instructions: "您将在几分钟内收到一封重置密码的邮件。"
+      send_paranoid_instructions: "如果您的邮箱存在于我们的数据库中，您将在几分钟内收到一封重置密码的邮件。"
+      updated: "您的密码已成功修改。"
+      updated_not_active: "您的密码已成功修改。"
+    registrations:
+      destroyed: "再见！您的账户已成功注销。我们希望很快能再见到您。"
+      signed_up: "欢迎！您已成功注册。"
+      signed_up_but_inactive: "您已成功注册，但您的账户尚未激活。"
+      signed_up_but_locked: "您已成功注册，但您的账户已被锁定。"
+      signed_up_but_unconfirmed: "一封验证邮件已发送到您的邮箱。请点击邮件中的链接激活您的账户。"
+      update_needs_confirmation: "您的账户信息已更新，但我们需要验证您的新邮箱。请检查您的邮箱并点击链接完成验证。"
+      updated: "您的账户信息已成功更新。"
+    sessions:
+      signed_in: "登录成功。"
+      signed_out: "退出成功。"
+    unlocks:
+      send_instructions: "您将在几分钟内收到一封解锁账户的邮件。"
+      send_paranoid_instructions: "如果您的账户存在于我们的数据库中，您将在几分钟内收到一封解锁账户的邮件。"
+      unlocked: "您的账户已成功解锁。"
+  errors:
+    messages:
+      already_confirmed: "已验证，请直接登录"
+      confirmation_period_expired: "需要在 %{period} 内验证，已过期"
+      expired: "已过期，请重新请求"
+      not_found: "不存在"
+      not_locked: "未被锁定"
+      not_saved:
+        one: "有 1 个错误导致此记录无法保存："
+        other: "有 %{count} 个错误导致此记录无法保存："
