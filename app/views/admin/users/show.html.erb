@@ -1,0 +1,30 @@
+<% content_for :title, "用户详情 - #{@user.username}" %>
+
+<div class="card">
+  <div class="card-header">
+    <h3>用户信息</h3>
+    <div>
+      <%= link_to '编辑', edit_admin_user_path(@user), class: 'btn btn-primary' %>
+      <%= link_to '返回列表', admin_users_path, class: 'btn btn-secondary' %>
+    </div>
+  </div>
+  <div class="grid grid-2">
+    <div>
+      <p><strong>用户名:</strong> <%= @user.username %></p>
+      <p><strong>邮箱:</strong> <%= @user.email %></p>
+      <p><strong>角色:</strong> <%= @user.role&.name || (user.is_admin? ? '超级管理员' : '普通用户') %></p>
+      <p><strong>管理员:</strong> <%= @user.is_admin? ? '是' : '否' %></p>
+    </div>
+    <div>
+      <p><strong>注册时间:</strong> <%= @user.created_at.strftime('%Y-%m-%d %H:%M') %></p>
+      <p><strong>注册IP:</strong> <%= @user.registration_ip || '-' %></p>
+      <p><strong>最后登录:</strong> <%= @user.last_sign_in_at&.strftime('%Y-%m-%d %H:%M') || '-' %></p>
+      <p><strong>登录IP:</strong> <%= @user.last_sign_in_ip || '-' %></p>
+      <p><strong>在线状态:</strong> 
+        <span class="status-badge <%= @user.online? ? 'status-online' : 'status-offline' %>">
+          <%= @user.online? ? '在线' : '离线' %>
+        </span>
+      </p>
+    </div>
+  </div>
+</div>

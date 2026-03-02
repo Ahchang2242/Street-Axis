@@ -1,0 +1,33 @@
+<%= form_with(model: [:admin, web_module], local: true) do |form| %>
+  <% if web_module.errors.any? %>
+    <div class="alert alert-danger">
+      <% web_module.errors.full_messages.each do |msg| %>
+        <p><%= msg %></p>
+      <% end %>
+    </div>
+  <% end %>
+  <div class="form-group">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= form.label :identifier %>
+    <%= form.text_field :identifier, class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= form.label :description %>
+    <%= form.text_area :description, class: 'form-control', rows: 3 %>
+  </div>
+  <div class="form-group">
+    <%= form.label :is_active %>
+    <%= form.check_box :is_active %>
+  </div>
+  <div class="form-group">
+    <%= form.label :position %>
+    <%= form.number_field :position, class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= form.submit '保存', class: 'btn btn-primary' %>
+    <%= link_to '取消', web_module.persisted? ? admin_web_module_path(web_module) : admin_web_modules_path, class: 'btn btn-secondary' %>
+  </div>
+<% end %>

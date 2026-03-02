@@ -1,0 +1,43 @@
+<% content_for :title, '内容管理' %>
+
+<div class="card">
+  <div class="card-header">
+    <h3>Web内容列表</h3>
+    <%= link_to '新建内容', new_admin_web_content_path, class: 'btn btn-primary' %>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>标题</th>
+        <th>类型</th>
+        <th>作者</th>
+        <th>发布状态</th>
+        <th>创建时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @web_contents.each do |web_content| %>
+        <tr>
+          <td><%= web_content.title %></td>
+          <td><%= web_content.content_type %></td>
+          <td><%= web_content.author&.username %></td>
+          <td>
+            <span class="status-badge <%= web_content.is_published? ? 'status-active' : 'status-inactive' %>">
+              <%= web_content.is_published? ? '已发布' : '草稿' %>
+            </span>
+          </td>
+          <td><%= web_content.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+          <td>
+            <%= link_to '查看', admin_web_content_path(web_content), class: 'btn btn-primary btn-sm' %>
+            <%= link_to '编辑', edit_admin_web_content_path(web_content), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to '预览', preview_admin_web_content_path(web_content), class: 'btn btn-success btn-sm', target: '_blank' %>
+            <%= link_to web_content.is_published? ? '取消发布' : '发布', toggle_publish_admin_web_content_path(web_content), method: :patch, class: 'btn btn-info btn-sm' %>
+            <%= link_to '删除', admin_web_content_path(web_content), method: :delete, data: { confirm: '确定删除该内容吗？' }, class: 'btn btn-danger btn-sm' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= paginate @web_contents %>
+</div>

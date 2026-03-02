@@ -1,0 +1,44 @@
+<% content_for :title, '模块管理' %>
+
+<div class="card">
+  <div class="card-header">
+    <h3>模块列表</h3>
+    <%= link_to '新建模块', new_admin_web_module_path, class: 'btn btn-primary' %>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>名称</th>
+        <th>标识</th>
+        <th>描述</th>
+        <th>状态</th>
+        <th>位置</th>
+        <th>使用次数</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @web_modules.each do |mod| %>
+        <tr>
+          <td><%= mod.name %></td>
+          <td><%= mod.identifier %></td>
+          <td><%= truncate(mod.description, length: 50) %></td>
+          <td>
+            <span class="status-badge <%= mod.is_active ? 'status-active' : 'status-inactive' %>">
+              <%= mod.is_active ? '启用' : '禁用' %>
+            </span>
+          </td>
+          <td><%= mod.position %></td>
+          <td><%= mod.usage_count %></td>
+          <td>
+            <%= link_to '查看', admin_web_module_path(mod), class: 'btn btn-primary btn-sm' %>
+            <%= link_to '编辑', edit_admin_web_module_path(mod), class: 'btn btn-secondary btn-sm' %>
+            <%= link_to mod.is_active ? '禁用' : '启用', toggle_admin_web_module_path(mod), method: :patch, class: 'btn btn-success btn-sm' %>
+            <%= link_to '删除', admin_web_module_path(mod), method: :delete, data: { confirm: '确定删除该模块吗？' }, class: 'btn btn-danger btn-sm' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= paginate @web_modules %>
+</div>

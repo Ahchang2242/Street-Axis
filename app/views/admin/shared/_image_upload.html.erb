@@ -1,0 +1,170 @@
+<div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+  <h4 style="color: #495057; margin-bottom: 15px; font-size: 1.1rem; font-weight: 600;">图片设置</h4>
+  
+  <% if object.display_image %>
+    <div style="background-color: white; padding: 15px; border-radius: 6px; border: 1px solid #dee2e6; margin-bottom: 15px;">
+      <label style="display: block; font-weight: 500; color: #495057; margin-bottom: 10px;">当前图片:</label>
+      <div>
+        <% if object.uploaded_image.attached? %>
+          <%= image_tag object.display_image, style: 'max-width: 300px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; padding: 4px; border-radius: 4px;' %>
+        <% else %>
+          <img src="<%= object.display_image %>" style="max-width: 300px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; padding: 4px; border-radius: 4px;" alt="Current image">
+        <% end %>
+      </div>
+      <% if remove_image_path %>
+        <%= link_to '删除图片', remove_image_path, method: :delete, data: { confirm: '确定要删除这张图片吗？' }, class: 'btn btn-sm btn-danger', style: 'margin-top: 10px; display: inline-block;' %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div style="margin: 15px 0;">
+    <div style="padding-left: 1.75rem; margin-bottom: 10px;">
+      <input type="radio" name="image_option" id="image_option_url" value="url" 
+             style="margin-top: 0.3rem;"
+             <% if (object.image.present? && !object.uploaded_image.attached?) || (!object.uploaded_image.attached? && !object.image.present?) %>checked<% end %>>
+      <label for="image_option_url" style="color: #495057; cursor: pointer; margin-left: 5px;">
+        使用图片URL
+      </label>
+    </div>
+    
+    <div style="padding-left: 1.75rem; margin-bottom: 15px;">
+      <input type="radio" name="image_option" id="image_option_upload" value="upload" 
+             style="margin-top: 0.3rem;"
+             <% if object.uploaded_image.attached? %>checked<% end %>>
+      <label for="image_option_upload" style="color: #495057; cursor: pointer; margin-left: 5px;">
+        上传本地图片
+      </label>
+    </div>
+  </div>
+
+  <div id="url_input" style="<% if (object.image.present? && !object.uploaded_image.attached?) || (!object.uploaded_image.attached? && !object.image.present?) %>display: block;<% else %>display: none;<% end %> background-color: white; padding: 15px; border-radius: 6px; border: 1px solid #dee2e6;">
+    <div class="form-group">
+      <%= f.label :image, '图片URL' %>
+      <%= f.text_field :image, class: 'form-control', placeholder: 'https://example.com/image.jpg' %>
+      <small style="color: #6c757d; font-size: 80%;">支持HTTP/HTTPS协议的图片URL</small>
+    </div>
+  </div>
+
+  <div id="upload_input" style="<% if object.uploaded_image.attached? %>display: block;<% else %>display: none;<% end %> background-color: white; padding: 15px; border-radius: 6px; border: 1px solid #dee2e6;">
+    <div class="form-group">
+      <%= f.label :uploaded_image, '选择图片文件' %>
+      <%= f.file_field :uploaded_image, class: 'form-control', accept: 'image/jpeg,image/png,image/webp,image/gif', id: 'image_file_input' %>
+      <small style="color: #6c757d; font-size: 80%;">支持JPG、PNG、WebP、GIF格式，最大10MB</small>
+    </div>
+    
+    <div id="upload_progress" style="display: none; margin-top: 10px;">
+      <label style="display: block; font-weight: 500; color: #495057; margin-bottom: 5px;">上传进度:</label>
+      <div style="background-color: #e9ecef; border-radius: 4px; height: 20px; overflow: hidden;">
+        <div id="progress_bar" style="background-color: #007bff; height: 100%; width: 0%; transition: width 0.3s ease;"></div>
+      </div>
+      <div id="progress_text" style="margin-top: 5px; font-size: 14px; color: #6c757d;">0%</div>
+    </div>
+    
+    <div id="upload_preview" style="display: none; margin-top: 10px;">
+      <label style="display: block; font-weight: 500; color: #495057; margin-bottom: 10px;">预览:</label>
+      <img id="preview_image" style="max-width: 300px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; padding: 4px; border-radius: 4px;">
+    </div>
+  </div>
+
+  <script>
+    function initImageUpload() {
+      var urlOption = document.getElementById('image_option_url');
+      var uploadOption = document.getElementById('image_option_upload');
+      var urlInput = document.getElementById('url_input');
+      var uploadInput = document.getElementById('upload_input');
+      var fileInput = document.getElementById('image_file_input');
+      var previewContainer = document.getElementById('upload_preview');
+      var previewImage = document.getElementById('preview_image');
+      var progressContainer = document.getElementById('upload_progress');
+      var progressBar = document.getElementById('progress_bar');
+      var progressText = document.getElementById('progress_text');
+      var imageField = document.querySelector('input[name$="[image]"]');
+      var form = fileInput ? fileInput.closest('form') : null;
+      
+      if (!urlOption || !uploadOption) return;
+      
+      function toggleImageOptions() {
+        if (urlOption.checked) {
+          urlInput.style.display = 'block';
+          uploadInput.style.display = 'none';
+          if (fileInput) fileInput.value = '';
+          if (previewContainer) previewContainer.style.display = 'none';
+          if (progressContainer) progressContainer.style.display = 'none';
+        } else {
+          urlInput.style.display = 'none';
+          uploadInput.style.display = 'block';
+          if (imageField) imageField.value = '';
+        }
+      }
+      
+      urlOption.addEventListener('change', toggleImageOptions);
+      uploadOption.addEventListener('change', toggleImageOptions);
+      
+      if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+          var file = e.target.files[0];
+          if (file) {
+            var validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+            if (validTypes.indexOf(file.type) === -1) {
+              alert('请选择JPG、PNG、WebP或GIF格式的图片');
+              fileInput.value = '';
+              previewContainer.style.display = 'none';
+              progressContainer.style.display = 'none';
+              return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+              alert('图片大小不能超过10MB');
+              fileInput.value = '';
+              previewContainer.style.display = 'none';
+              progressContainer.style.display = 'none';
+              return;
+            }
+            
+            var reader = new FileReader();
+            
+            reader.onload = function(e) {
+              previewImage.src = e.target.result;
+              previewContainer.style.display = 'block';
+            };
+            
+            reader.onerror = function() {
+              alert('图片加载失败，请重试');
+              fileInput.value = '';
+              previewContainer.style.display = 'none';
+            };
+            
+            reader.readAsDataURL(file);
+          } else {
+            previewContainer.style.display = 'none';
+          }
+        });
+      }
+      
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          var file = fileInput ? fileInput.files[0] : null;
+          if (file && uploadOption.checked) {
+            progressContainer.style.display = 'block';
+            progressBar.style.width = '0%';
+            progressText.textContent = '0%';
+            
+            var progress = 0;
+            var interval = setInterval(function() {
+              progress += Math.random() * 15;
+              if (progress >= 95) {
+                progress = 95;
+                clearInterval(interval);
+              }
+              progressBar.style.width = progress + '%';
+              progressText.textContent = Math.floor(progress) + '%';
+            }, 200);
+          }
+        });
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', initImageUpload);
+    document.addEventListener('turbolinks:load', initImageUpload);
+  </script>
+</div>

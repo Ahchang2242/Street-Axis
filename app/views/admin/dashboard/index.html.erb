@@ -1,0 +1,97 @@
+<% content_for :title, '仪表盘' %>
+
+<div class="grid grid-4">
+  <div class="stat-card">
+    <h3><%= @total_users %></h3>
+    <p>总用户数</p>
+  </div>
+  <div class="stat-card">
+    <h3><%= @active_users %></h3>
+    <p>活跃用户（7天）</p>
+  </div>
+  <div class="stat-card">
+    <h3><%= @online_users %></h3>
+    <p>在线用户</p>
+  </div>
+  <div class="stat-card">
+    <h3><%= @active_modules %>/<%= @total_modules %></h3>
+    <p>活跃模块</p>
+  </div>
+</div>
+
+<div class="grid grid-2" style="margin-top: 20px;">
+  <div class="chart-container">
+    <h3 style="margin-bottom: 15px;">用户增长趋势</h3>
+    <canvas id="userGrowthChart" height="200"></canvas>
+  </div>
+  <div class="chart-container">
+    <h3 style="margin-bottom: 15px;">模块使用排行</h3>
+    <canvas id="moduleUsageChart" height="200"></canvas>
+  </div>
+</div>
+
+<div class="card" style="margin-top: 20px;">
+  <div class="card-header">
+    <h3>最近操作记录</h3>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>操作人</th>
+        <th>操作类型</th>
+        <th>资源</th>
+        <th>时间</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @recent_logs.each do |log| %>
+        <tr>
+          <td><%= log.user&.username || '系统' %></td>
+          <td><%= log.action %></td>
+          <td><%= log.resource_type %> #<%= log.resource_id %></td>
+          <td><%= log.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+  new Chart(userGrowthCtx, {
+    type: 'line',
+    data: {
+      labels: <%= @user_growth.keys.map { |d| d.strftime('%m-%d') }.to_json %>,
+      datasets: [{
+        label: '新增用户',
+        data: <%= @user_growth.values.to_json %>,
+        borderColor: '#667eea',
+        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+        fill: true,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  const moduleUsageCtx = document.getElementById('moduleUsageChart').getContext('2d');
+  new Chart(moduleUsageCtx, {
+    type: 'bar',
+    data: {
+      labels: <%= @module_usage.map { |m| m[0] }.to_json %>,
+      datasets: [{
+        label: '使用次数',
+        data: <%= @module_usage.map { |m| m[1] }.to_json %>,
+        backgroundColor: 'rgba(118, 75, 162, 0.8)'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      indexAxis: 'y'
+    }
+  });
+</script>

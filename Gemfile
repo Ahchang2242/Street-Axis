@@ -30,13 +30,24 @@ gem 'redis', '~> 4.8'
 # User authentication
 gem 'devise', '~> 4.9.0'
 
+# Authorization and permissions
+gem 'cancancan', '~> 3.5'
+
+# Data visualization
+gem 'chartkick'
+gem 'groupdate'
+
+# Pagination
+gem 'kaminari'
+
 # Redis session store
 gem 'redis-session-store', '~> 0.11.0'
 # Ruby 3.4 compatibility
 gem 'mutex_m'
 
 # Use ActiveStorage variant
-# gem 'mini_magick', '~> 4.8'
+gem 'mini_magick', '~> 4.8'
+gem 'image_processing', '~> 1.2'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

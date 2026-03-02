@@ -1,0 +1,9 @@
+<% content_for :title, "编辑权限 - #{@permission.name}" %>
+
+<div class="card">
+  <div class="card-header">
+    <h3>编辑权限</h3>
+    <%= link_to '返回', admin_permission_path(@permission), class: 'btn btn-secondary' %>
+  </div>
+  <%= render 'form', permission: @permission %>
+</div>

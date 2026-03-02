@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最新活动 - Street Axis</title>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload', 'data-turbolinks-eval': 'false' %>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Georgia', 'Noto Serif SC', serif; line-height: 1.8; color: #4A4A4A; background-color: #FAF8F5; }
+        .navbar { background-color: rgba(250, 248, 245, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(139, 115, 85, 0.1); padding: 20px 0; position: fixed; width: 100%; top: 0; z-index: 1000; transition: all 0.4s ease; }
+        .navbar.scrolled { background-color: rgba(250, 248, 245, 0.98); padding: 15px 0; box-shadow: 0 2px 20px rgba(139, 115, 85, 0.08); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 28px; font-weight: 300; color: #8B7355; text-decoration: none; letter-spacing: 3px; }
+        .nav-menu { display: flex; list-style: none; }
+        .nav-menu li { margin-left: 40px; }
+        .nav-menu a { color: #6B6B6B; text-decoration: none; font-size: 15px; transition: color 0.3s ease; letter-spacing: 1px; font-weight: 300; }
+        .nav-menu a:hover { color: #8B7355; }
+        .user-area { display: flex; align-items: center; }
+        .nav-link { color: #6B6B6B; text-decoration: none; margin-left: 25px; font-size: 14px; transition: color 0.3s ease; letter-spacing: 0.5px; }
+        .nav-link:hover { color: #8B7355; }
+        .login-btn { background-color: #8B7355; color: #FFFFFF; padding: 10px 24px; border-radius: 2px; font-weight: 400; letter-spacing: 1px; transition: all 0.3s ease; text-decoration: none; margin-left: 25px; font-size: 14px; border: none; cursor: pointer; font-family: 'Georgia', 'Noto Serif SC', serif; }
+        .login-btn:hover { background-color: #6B5B45; color: #FFFFFF; transform: translateY(-1px); }
+        .user-dropdown { position: relative; margin-left: 25px; display: inline-block; z-index: 1001; }
+        .user-avatar { width: 44px; height: 44px; border-radius: 50%; background-color: #8B7355; color: #FAF8F5; display: flex; align-items: center; justify-content: center; font-weight: 400; cursor: pointer; font-size: 16px; transition: all 0.3s ease; }
+        .user-avatar:hover { background-color: #6B5B45; transform: scale(1.05); }
+        .dropdown-menu { position: absolute; top: 100%; right: 0; background-color: #FAF8F5; color: #4A4A4A; min-width: 200px; box-shadow: 0 4px 30px rgba(139, 115, 85, 0.15); border-radius: 4px; padding: 8px 0; margin-top: 12px; visibility: hidden; opacity: 0; z-index: 9999; overflow: hidden; transition: all 0.3s ease; transform: translateY(-10px); pointer-events: none; border: 1px solid rgba(139, 115, 85, 0.1); }
+        .dropdown-menu.show { visibility: visible; opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .user-info { display: flex; align-items: center; padding: 20px; border-bottom: 1px solid rgba(139, 115, 85, 0.1); }
+        .user-avatar-large { width: 52px; height: 52px; border-radius: 50%; background-color: #8B7355; display: flex; align-items: center; justify-content: center; color: #FAF8F5; font-weight: 400; font-size: 22px; margin-right: 14px; }
+        .user-details { flex: 1; }
+        .user-name { font-weight: 400; font-size: 15px; margin-bottom: 4px; color: #4A4A4A; letter-spacing: 0.5px; }
+        .user-email { font-size: 13px; color: #8B8B8B; }
+        .menu-divider { height: 1px; background-color: rgba(139, 115, 85, 0.1); margin: 4px 0; }
+        .dropdown-menu .menu-item { display: block; padding: 12px 24px; color: #6B6B6B !important; text-decoration: none; font-size: 14px; transition: all 0.3s ease; margin: 0; box-sizing: border-box; text-align: left; letter-spacing: 0.5px; }
+        .dropdown-menu .menu-item:hover { background-color: rgba(139, 115, 85, 0.08); color: #8B7355 !important; }
+        .dropdown-menu form { margin: 0; padding: 0; }
+        .logout-btn { display: block; width: 100%; padding: 12px 24px; color: #6B6B6B; text-decoration: none; font-size: 14px; background: none; border: none; cursor: pointer; transition: all 0.3s ease; margin: 0; box-sizing: border-box; text-align: left; letter-spacing: 0.5px; }
+        .logout-btn:hover { background-color: rgba(139, 115, 85, 0.08); color: #8B7355; }
+        .main-content { padding-top: 120px; padding-bottom: 120px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+        .page-header { text-align: center; margin-bottom: 80px; }
+        .page-header h1 { font-size: 48px; color: #4A4A4A; margin-bottom: 16px; font-weight: 300; letter-spacing: 2px; }
+        .page-header p { font-size: 18px; color: #8B8B8B; font-weight: 300; letter-spacing: 0.5px; }
+        .events-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 40px; }
+        .event-card { background-color: #FFFFFF; border-radius: 2px; overflow: hidden; box-shadow: 0 2px 20px rgba(139, 115, 85, 0.08); transition: all 0.4s ease; border: 1px solid rgba(139, 115, 85, 0.05); }
+        .event-card:hover { transform: translateY(-8px); box-shadow: 0 12px 40px rgba(139, 115, 85, 0.15); }
+        .event-image { height: 240px; overflow: hidden; background-color: #f0f0f0; }
+        .event-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; filter: brightness(0.95) contrast(1.05); }
+        .event-card:hover .event-image img { transform: scale(1.08); }
+        .event-content { padding: 28px; }
+        .event-date { font-size: 14px; color: #8B7355; font-weight: 400; margin-bottom: 12px; letter-spacing: 1px; text-transform: uppercase; }
+        .event-content h3 { font-size: 20px; color: #4A4A4A; margin-bottom: 12px; font-weight: 400; letter-spacing: 0.5px; }
+        .event-content p { font-size: 15px; color: #8B8B8B; margin-bottom: 16px; line-height: 1.7; font-weight: 300; }
+        .event-btn { display: inline-block; background-color: transparent; color: #8B7355; padding: 12px 28px; border-radius: 2px; font-size: 14px; font-weight: 400; text-decoration: none; transition: all 0.3s ease; letter-spacing: 1px; border: 1px solid #8B7355; }
+        .event-btn:hover { background-color: #8B7355; color: #FAF8F5; }
+        .back-link { display: inline-block; margin-top: 60px; color: #8B7355; text-decoration: none; font-size: 15px; transition: color 0.3s ease; letter-spacing: 0.5px; }
+        .back-link:hover { color: #6B5B45; }
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .nav-container { padding: 0 20px; }
+            .main-content { padding-top: 100px; padding-bottom: 80px; }
+            .container { padding: 0 20px; }
+            .page-header h1 { font-size: 36px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="<%= root_path %>" class="logo">Street Axis</a>
+            <ul class="nav-menu">
+                <li><%= link_to "首页", root_path %></li>
+                <li><%= link_to "街舞分类", categories_path %></li>
+                <li><%= link_to "最新活动", events_path %></li>
+                <li><%= link_to "关于我们", about_path %></li>
+                <li><%= link_to "联系我们", contact_path %></li>
+            </ul>
+            <div class="user-area">
+                <% if !user_signed_in? %>
+                    <%= link_to "注册", new_user_registration_path, class: "nav-link" %>
+                    <%= link_to "登录", new_user_session_path, class: "login-btn" %>
+                <% else %>
+                    <div class="user-dropdown">
+                        <div class="user-avatar" id="user-avatar"><%= current_user.email.first.upcase %></div>
+                        <div class="dropdown-menu">
+                            <div class="user-info">
+                                <div class="user-avatar-large"><%= current_user.email.first.upcase %></div>
+                                <div class="user-details">
+                                    <div class="user-name"><%= current_user.email.split('@').first %></div>
+                                    <div class="user-email"><%= current_user.email %></div>
+                                </div>
+                            </div>
+                            <div class="menu-divider"></div>
+                            <a href="<%= user_profile_path %>" class="menu-item">个人中心</a>
+                            <a href="<%= user_courses_path %>" class="menu-item">我的课程</a>
+                            <div class="menu-divider"></div>
+                            <%= form_for(current_user, as: :user, url: destroy_user_session_path, method: :delete) do |f| %>
+                                <button type="submit" class="menu-item logout-btn">退出登录</button>
+                            <% end %>
+                        </div>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1>最新活动</h1>
+                <p>查看我们即将举行的街舞活动和课程</p>
+            </div>
+            
+            <div class="events-grid">
+                <% if @events && @events.any? %>
+                    <% @events.each do |event| %>
+                        <div class="event-card">
+                            <div class="event-image">
+                                <% if event.display_image %>
+                                    <% if event.uploaded_image.attached? %>
+                                        <%= image_tag event.display_image, alt: event.title %>
+                                    <% else %>
+                                        <img src="<%= event.display_image %>" alt="<%= event.title %>">
+                                    <% end %>
+                                <% else %>
+                                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=<%= URI.encode_www_form_component(event.title + ' hip hop event') %>&image_size=landscape_4_3" alt="<%= event.title %>">
+                                <% end %>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-date"><%= event.date.strftime('%Y年%m月%d日') %></div>
+                                <h3><%= event.title %></h3>
+                                <p><%= event.description %></p>
+                                <a href="#" class="event-btn">了解更多</a>
+                            </div>
+                        </div>
+                    <% end %>
+                <% else %>
+                    <div style="grid-column: 1/-1; text-align: center; padding: 60px;">
+                        <p style="color: #8B8B8B; font-size: 18px;">暂无活动数据，请在后台管理系统中添加</p>
+                    </div>
+                <% end %>
+            </div>
+            
+            <div style="text-align: center;">
+                <%= link_to "← 返回首页", root_path, class: "back-link" %>
+            </div>
+        </div>
+    </main>
+    
+    <script data-turbolinks-eval="false">
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (navbar && window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else if (navbar) {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        function initUserDropdown() {
+            const userDropdown = document.querySelector('.user-dropdown');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            let isOpenByClick = false;
+            let hoverTimeout;
+            
+            if (userDropdown && dropdownMenu) {
+                userDropdown.setAttribute('tabindex', '0');
+                userDropdown.setAttribute('role', 'button');
+                userDropdown.setAttribute('aria-haspopup', 'true');
+                userDropdown.setAttribute('aria-expanded', 'false');
+                
+                function handleClick(e) {
+                    e.stopPropagation();
+                    isOpenByClick = !isOpenByClick;
+                    dropdownMenu.classList.toggle('show');
+                    userDropdown.setAttribute('aria-expanded', dropdownMenu.classList.contains('show'));
+                }
+                
+                function handleMouseEnter() {
+                    clearTimeout(hoverTimeout);
+                    if (!isOpenByClick) {
+                        dropdownMenu.classList.add('show');
+                        userDropdown.setAttribute('aria-expanded', 'true');
+                    }
+                }
+                
+                function handleMouseLeave() {
+                    if (!isOpenByClick) {
+                        hoverTimeout = setTimeout(() => {
+                            dropdownMenu.classList.remove('show');
+                            userDropdown.setAttribute('aria-expanded', 'false');
+                        }, 200);
+                    }
+                }
+                
+                function handleClickOutside(e) {
+                    if (!userDropdown.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                        isOpenByClick = false;
+                        userDropdown.setAttribute('aria-expanded', 'false');
+                    }
+                }
+                
+                function handleKeyDown(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleClick(e);
+                    } else if (e.key === 'Escape') {
+                        dropdownMenu.classList.remove('show');
+                        isOpenByClick = false;
+                        userDropdown.setAttribute('aria-expanded', 'false');
+                    }
+                }
+                
+                userDropdown.addEventListener('click', handleClick);
+                userDropdown.addEventListener('mouseenter', handleMouseEnter);
+                userDropdown.addEventListener('mouseleave', handleMouseLeave);
+                dropdownMenu.addEventListener('mouseenter', handleMouseEnter);
+                dropdownMenu.addEventListener('mouseleave', handleMouseLeave);
+                userDropdown.addEventListener('keydown', handleKeyDown);
+                document.addEventListener('click', handleClickOutside);
+            }
+        }
+        
+        function initLogout() {
+            const logoutBtn = document.querySelector('.logout-btn');
+            const logoutForm = document.querySelector('.dropdown-menu form');
+            
+            if (logoutBtn && logoutForm) {
+                function handleLogoutClick(e) {
+                    e.stopPropagation();
+                    logoutForm.submit();
+                }
+                
+                logoutBtn.addEventListener('click', handleLogoutClick);
+            }
+        }
+        
+        function initPage() {
+            initUserDropdown();
+            initLogout();
+        }
+        
+        document.addEventListener('DOMContentLoaded', initPage);
+        document.addEventListener('turbolinks:load', initPage);
+    </script>
+</body>
+</html>

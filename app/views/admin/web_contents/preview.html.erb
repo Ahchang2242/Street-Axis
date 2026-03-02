@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Preview - <%= @web_content.title %></title>
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+    .preview-warning {
+      background: #ffc107;
+      padding: 10px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    h1 {
+      color: #333;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 10px;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 10px 20px;
+      background: #667eea;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-warning">
+    PREVIEW MODE
+  </div>
+  
+  <h1><%= @web_content.title %></h1>
+  
+  <% if @web_content.summary.present? %>
+    <p><em><%= @web_content.summary %></em></p>
+  <% end %>
+  
+  <% if @web_content.content.present? %>
+    <div><%= @web_content.content.html_safe %></div>
+  <% end %>
+  
+  <%= link_to 'Back to Admin', admin_web_content_path(@web_content), class: 'back-btn' %>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<%= form_for([:admin, web_content]) do |f| %>
+  <% if web_content.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(web_content.errors.count, "error") %> 禁止该内容保存:</h4>
+      <ul>
+        <% web_content.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :title %>
+    <%= f.text_field :title, class: 'form-control', required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :slug %>
+    <%= f.text_field :slug, class: 'form-control', required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :content_type %>
+    <%= f.select :content_type, ['page', 'article', 'news', 'event'], {}, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :summary %>
+    <%= f.text_area :summary, class: 'form-control', rows: 3 %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :content %>
+    <%= f.text_area :content, class: 'form-control', rows: 15 %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :position %>
+    <%= f.number_field :position, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :meta_title %>
+    <%= f.text_field :meta_title, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :meta_description %>
+    <%= f.text_area :meta_description, class: 'form-control', rows: 3 %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :meta_keywords %>
+    <%= f.text_field :meta_keywords, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.check_box :is_published %>
+    <%= f.label :is_published %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit 'Save', class: 'btn btn-primary' %>
+    <%= link_to 'Cancel', admin_web_contents_path, class: 'btn btn-secondary' %>
+  </div>
+<% end %>

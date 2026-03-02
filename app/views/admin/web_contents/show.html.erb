@@ -1,0 +1,54 @@
+<% content_for :title, @web_content.title %>
+
+<div class="card">
+  <div class="card-header">
+    <h3><%= @web_content.title %></h3>
+    <div>
+      <%= link_to '编辑', edit_admin_web_content_path(@web_content), class: 'btn btn-secondary' %>
+      <%= link_to '预览', preview_admin_web_content_path(@web_content), class: 'btn btn-success', target: '_blank' %>
+      <%= link_to '返回列表', admin_web_contents_path, class: 'btn btn-outline' %>
+    </div>
+  </div>
+  <div class="web-content-detail">
+    <p><strong>Slug:</strong> <%= @web_content.slug %></p>
+    <p><strong>类型:</strong> <%= @web_content.content_type %></p>
+    <p><strong>作者:</strong> <%= @web_content.author&.username %></p>
+    <p><strong>发布状态:</strong> 
+      <span class="status-badge <%= @web_content.is_published? ? 'status-active' : 'status-inactive' %>">
+        <%= @web_content.is_published? ? '已发布' : '草稿' %>
+      </span>
+    </p>
+    <p><strong>发布时间:</strong> <%= @web_content.published_at&.strftime('%Y-%m-%d %H:%M') || '未发布' %></p>
+    <p><strong>创建时间:</strong> <%= @web_content.created_at.strftime('%Y-%m-%d %H:%M') %></p>
+    <p><strong>更新时间:</strong> <%= @web_content.updated_at.strftime('%Y-%m-%d %H:%M') %></p>
+    
+    <% if @web_content.summary.present? %>
+      <div class="mt-4">
+        <strong>摘要:</strong>
+        <p><%= @web_content.summary %></p>
+      </div>
+    <% end %>
+    
+    <% if @web_content.content.present? %>
+      <div class="mt-4">
+        <strong>内容:</strong>
+        <div class="content-body"><%= @web_content.content.html_safe %></div>
+      </div>
+    <% end %>
+    
+    <% if @web_content.meta_title.present? || @web_content.meta_description.present? || @web_content.meta_keywords.present? %>
+      <div class="mt-4">
+        <strong>SEO信息:</strong>
+        <% if @web_content.meta_title.present? %>
+          <p><strong>Meta标题:</strong> <%= @web_content.meta_title %></p>
+        <% end %>
+        <% if @web_content.meta_description.present? %>
+          <p><strong>Meta描述:</strong> <%= @web_content.meta_description %></p>
+        <% end %>
+        <% if @web_content.meta_keywords.present? %>
+          <p><strong>Meta关键词:</strong> <%= @web_content.meta_keywords %></p>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

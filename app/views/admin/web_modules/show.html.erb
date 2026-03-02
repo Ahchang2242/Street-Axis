@@ -1,0 +1,34 @@
+<% content_for :title, "模块详情 - #{@web_module.name}" %>
+
+<div class="card">
+  <div class="card-header">
+    <h3>模块信息</h3>
+    <div>
+      <%= link_to '编辑', edit_admin_web_module_path(@web_module), class: 'btn btn-primary' %>
+      <%= link_to '返回列表', admin_web_modules_path, class: 'btn btn-secondary' %>
+    </div>
+  </div>
+  <div class="grid grid-2">
+    <div>
+      <p><strong>名称:</strong> <%= @web_module.name %></p>
+      <p><strong>标识:</strong> <%= @web_module.identifier %></p>
+      <p><strong>描述:</strong> <%= @web_module.description %></p>
+    </div>
+    <div>
+      <p><strong>状态:</strong> 
+        <span class="status-badge <%= @web_module.is_active ? 'status-active' : 'status-inactive' %>">
+          <%= @web_module.is_active ? '启用' : '禁用' %>
+        </span>
+      </p>
+      <p><strong>位置:</strong> <%= @web_module.position %></p>
+      <p><strong>使用次数:</strong> <%= @web_module.usage_count %></p>
+      <p><strong>创建时间:</strong> <%= @web_module.created_at.strftime('%Y-%m-%d %H:%M') %></p>
+    </div>
+  </div>
+  <% if @web_module.config.present? %>
+    <div style="margin-top: 20px;">
+      <h4>配置参数</h4>
+      <pre><%= JSON.pretty_generate(@web_module.config) %></pre>
+    </div>
+  <% end %>
+</div>

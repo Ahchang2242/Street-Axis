@@ -1,0 +1,9 @@
+<% content_for :title, "编辑模块 - #{@web_module.name}" %>
+
+<div class="card">
+  <div class="card-header">
+    <h3>编辑模块</h3>
+    <%= link_to '返回', admin_web_module_path(@web_module), class: 'btn btn-secondary' %>
+  </div>
+  <%= render 'form', web_module: @web_module %>
+</div>

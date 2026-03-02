@@ -1,0 +1,356 @@
+# 街舞分类模型（DanceStyle）
+rails generate model DanceStyle name:string description:text image:string created_at:datetime updated_at:datetime
+
+
+# app/models/dance_style.rb
+class DanceStyle < ApplicationRecord
+  # 图片上传配置
+  mount_uploader :image, ImageUploader
+  
+  # 数据验证
+  validates :name, presence: true, length: { maximum: 100 }
+  validates :description, presence: true
+  
+  # 时间自动维护
+  before_save :set_timestamps
+  
+  private
+  
+  def set_timestamps
+    self.updated_at = Time.current
+    self.created_at = Time.current if new_record?
+  end
+end
+
+# 最新活动模型（Event）
+rails generate model Event title:string date:date description:text image:string created_at:datetime updated_at:datetime
+
+# app/models/event.rb
+class Event < ApplicationRecord
+  mount_uploader :image, ImageUploader
+  
+  validates :title, presence: true, length: { maximum: 200 }
+  validates :date, presence: true
+  validates :description, presence: true
+  
+  # 按日期倒序排列
+  default_scope { order(date: :desc) }
+  
+  before_save :set_timestamps
+  
+  private
+  
+  def set_timestamps
+    self.updated_at = Time.current
+    self.created_at = Time.current if new_record?
+  end
+end
+
+# 关于我们模型（AboutUs）
+rails generate model AboutUs mission:text teaching_philosophy:text image:string updated_at:datetime
+
+# app/models/about_us.rb
+class AboutUs < ApplicationRecord
+  mount_uploader :image, ImageUploader
+  
+  validates :mission, presence: true
+  validates :teaching_philosophy, presence: true
+  
+  # 确保只有一条记录（关于我们通常只有一份）
+  def self.instance
+    first || create!(mission: "", teaching_philosophy: "")
+  end
+  
+  before_save :set_updated_at
+  
+  private
+  
+  def set_updated_at
+    self.updated_at = Time.current
+  end
+end
+
+# 联系我们模型（ContactInfo）
+rails generate model ContactInfo address:string phone:string email:string business_hours:string updated_at:datetime
+
+# app/models/contact_info.rb
+class ContactInfo < ApplicationRecord
+  validates :address, presence: true
+  validates :phone, presence: true
+  validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :business_hours, presence: true
+  
+  # 确保只有一条记录
+  def self.instance
+    first || create!(address: "", phone: "", email: "", business_hours: "")
+  end
+  
+  before_save :set_updated_at
+  
+  private
+  
+  def set_updated_at
+    self.updated_at = Time.current
+  end
+end
+
+# 图片上传配置（CarrierWave）
+# 生成上传器
+rails generate uploader Image
+
+# app/uploaders/image_uploader.rb
+# encoding: utf-8
+class ImageUploader < CarrierWave::Uploader::Base
+  # 使用MiniMagick处理图片
+  include CarrierWave::MiniMagick
+
+  # 存储方式：开发环境本地存储，生产环境可扩展到S3
+  storage :file
+
+  # 图片存储路径
+  def store_dir
+    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+  end
+
+  # 允许的图片格式
+  def extension_allowlist
+    %w(jpg jpeg gif png webp)
+  end
+
+  # 图片尺寸限制（可选，优化前端展示）
+  version :thumb do
+    process resize_to_fill: [200, 200]
+  end
+
+  version :medium do
+    process resize_to_fit: [800, 600]
+  end
+
+  # 文件名处理（避免中文/特殊字符）
+  def filename
+    "#{secure_token}.#{file.extension}" if original_filename.present?
+  end
+
+  protected
+  def secure_token
+    var = :"@#{mounted_as}_secure_token"
+    model.instance_variable_get(var) or model.instance_variable_set(var, SecureRandom.uuid)
+  end
+end
+
+# Active Admin 后台配置
+# app/admin/dance_styles.rb
+ActiveAdmin.register DanceStyle do
+  # 中文名称
+  menu label: "街舞分类"
+  
+  # 后台显示的字段
+  index do
+    selectable_column
+    column "舞种名称", :name
+    column "描述", :description do |dance_style|
+      truncate(dance_style.description, length: 50)
+    end
+    column "创建时间", :created_at
+    column "更新时间", :updated_at
+    actions
+  end
+
+  # 表单编辑字段
+  form do |f|
+    f.inputs "街舞分类信息" do
+      f.input :name, label: "舞种名称"
+      f.input :description, label: "舞种描述", input_html: { rows: 5 }
+      f.input :image, label: "舞种图片", as: :file, hint: f.object.image.present? ? image_tag(f.object.image.medium.url) : ""
+    end
+    f.actions
+  end
+
+  # 详情页显示
+  show do
+    attributes_table do
+      row :name
+      row :description
+      row :image do |dance_style|
+        dance_style.image.present? ? image_tag(dance_style.image.medium.url) : "无图片"
+      end
+      row :created_at
+      row :updated_at
+    end
+  end
+
+  # 搜索功能
+  filter :name, label: "舞种名称"
+  filter :description, label: "描述"
+end
+
+# 最新活动管理
+# app/admin/events.rb
+ActiveAdmin.register Event do
+  menu label: "最新活动"
+
+  index do
+    selectable_column
+    column "活动标题", :title
+    column "活动日期", :date
+    column "描述", :description do |event|
+      truncate(event.description, length: 50)
+    end
+    column "创建时间", :created_at
+    actions
+  end
+
+  form do |f|
+    f.inputs "活动信息" do
+      f.input :title, label: "活动标题"
+      f.input :date, label: "活动日期", as: :datepicker
+      f.input :description, label: "活动描述", input_html: { rows: 5 }
+      f.input :image, label: "活动图片", as: :file, hint: f.object.image.present? ? image_tag(f.object.image.medium.url) : ""
+    end
+    f.actions
+  end
+
+  show do
+    attributes_table do
+      row :title
+      row :date
+      row :description
+      row :image do |event|
+        event.image.present? ? image_tag(event.image.medium.url) : "无图片"
+      end
+      row :created_at
+      row :updated_at
+    end
+  end
+
+  filter :title, label: "活动标题"
+  filter :date, label: "活动日期"
+end
+
+# 关于我们管理
+# app/admin/about_us.rb
+ActiveAdmin.register AboutUs do
+  menu label: "关于我们"
+
+  # 限制只能编辑一条记录
+  controller do
+    def index
+      redirect_to edit_admin_about_u_path(AboutUs.instance)
+    end
+
+    def new
+      redirect_to edit_admin_about_u_path(AboutUs.instance)
+    end
+  end
+
+  form do |f|
+    f.inputs "关于我们" do
+      f.input :mission, label: "我们的使命", input_html: { rows: 8 }
+      f.input :teaching_philosophy, label: "教学理念", input_html: { rows: 8 }
+      f.input :image, label: "配图", as: :file, hint: f.object.image.present? ? image_tag(f.object.image.medium.url) : ""
+    end
+    f.actions
+  end
+
+  show do
+    attributes_table do
+      row :mission do |about|
+        simple_format(about.mission)
+      end
+      row :teaching_philosophy do |about|
+        simple_format(about.teaching_philosophy)
+      end
+      row :image do |about|
+        about.image.present? ? image_tag(about.image.medium.url) : "无图片"
+      end
+      row :updated_at
+    end
+  end
+end
+
+# 联系我们管理
+# app/admin/contact_infos.rb
+ActiveAdmin.register ContactInfo do
+  menu label: "联系我们"
+
+  # 限制只能编辑一条记录
+  controller do
+    def index
+      redirect_to edit_admin_contact_info_path(ContactInfo.instance)
+    end
+
+    def new
+      redirect_to edit_admin_contact_info_path(ContactInfo.instance)
+    end
+  end
+
+  form do |f|
+    f.inputs "联系信息" do
+      f.input :address, label: "地址"
+      f.input :phone, label: "电话"
+      f.input :email, label: "邮箱"
+      f.input :business_hours, label: "营业时间"
+    end
+    f.actions
+  end
+
+  show do
+    attributes_table do
+      row :address
+      row :phone
+      row :email
+      row :business_hours
+      row :updated_at
+    end
+  end
+end
+
+# 中文本地化配置
+# config/locales/zh-CN.yml
+zh-CN:
+  active_admin:
+    dashboard: 仪表盘
+    logout: 退出
+    login: 登录
+    view_site: 查看网站
+    edit: 编辑
+    delete: 删除
+    create: 创建
+    update: 更新
+    cancel: 取消
+    confirm: 确认
+    actions: 操作
+    status_tag:
+      yes: 是
+      no: 否
+  activerecord:
+    models:
+      dance_style: 街舞分类
+      event: 最新活动
+      about_us: 关于我们
+      contact_info: 联系我们
+    attributes:
+      dance_style:
+        name: 舞种名称
+        description: 舞种描述
+        image: 舞种图片
+        created_at: 创建时间
+        updated_at: 更新时间
+      event:
+        title: 活动标题
+        date: 活动日期
+        description: 活动描述
+        image: 活动图片
+      about_us:
+        mission: 我们的使命
+        teaching_philosophy: 教学理念
+        image: 配图
+      contact_info:
+        address: 地址
+        phone: 电话
+        email: 邮箱
+        business_hours: 营业时间
+
+# config/application.rb
+config.i18n.default_locale = :"zh-CN"
+config.i18n.available_locales = [:"zh-CN", :en]

@@ -4,8 +4,16 @@ Rails.application.routes.draw do
   # Defines the root path route ("/").
   root to: "home#index"
 
+  # Navigation module pages
+  get '/categories', to: 'home#categories', as: :categories
+  get '/events', to: 'home#events', as: :events
+  get '/about', to: 'home#about', as: :about
+  get '/contact', to: 'home#contact', as: :contact
+
   # Devise routes for users
-  devise_for :users
+  devise_for :users, controllers: {
+    sessions: 'users/sessions'
+  }
   
   # User profile routes
   get '/user/profile', to: 'users#profile', as: :user_profile
@@ -21,4 +29,32 @@ Rails.application.routes.draw do
   get '/user/courses/:id/edit', to: 'users#edit_course', as: :edit_user_course
   patch '/user/courses/:id', to: 'users#update_course', as: :update_user_course
   delete '/user/courses/:id', to: 'users#destroy_course', as: :destroy_user_course
+
+  # Admin routes
+  namespace :admin do
+    root to: 'dashboard#index'
+    resources :users, only: [:index, :show, :edit, :update, :destroy]
+    resources :web_modules do
+      patch :toggle, on: :member
+    end
+    resources :web_contents do
+      patch :toggle_publish, on: :member
+      get :preview, on: :member
+    end
+    resources :dance_styles do
+      delete :remove_uploaded_image, on: :member
+    end
+    resources :events do
+      delete :remove_uploaded_image, on: :member
+    end
+    resource :about_us, only: [:show, :edit, :update] do
+      delete :remove_uploaded_image, on: :collection
+    end
+    resource :contact_info, only: [:show, :edit, :update] do
+      delete :remove_uploaded_image, on: :collection
+    end
+    resources :roles
+    resources :permissions
+    resources :operation_logs, only: [:index, :show]
+  end
 end

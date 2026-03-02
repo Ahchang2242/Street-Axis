@@ -1,4 +1,12 @@
-<style>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Street Axis - 专业街舞培训</title>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload', 'data-turbolinks-eval': 'false' %>
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -6,41 +14,46 @@
         }
         
         body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
+            font-family: 'Georgia', 'Noto Serif SC', serif;
+            line-height: 1.8;
+            color: #4A4A4A;
+            background-color: #FAF8F5;
         }
         
         /* 导航栏 */
         .navbar {
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 15px 0;
+            background-color: rgba(250, 248, 245, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(139, 115, 85, 0.1);
+            padding: 20px 0;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            transition: background-color 0.3s;
+            transition: all 0.4s ease;
         }
         
         .navbar.scrolled {
-            background-color: rgba(0, 0, 0, 0.95);
+            background-color: rgba(250, 248, 245, 0.98);
+            padding: 15px 0;
+            box-shadow: 0 2px 20px rgba(139, 115, 85, 0.08);
         }
         
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
         .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: white;
+            font-size: 28px;
+            font-weight: 300;
+            color: #8B7355;
             text-decoration: none;
+            letter-spacing: 3px;
         }
         
         .nav-menu {
@@ -49,18 +62,20 @@
         }
         
         .nav-menu li {
-            margin-left: 30px;
+            margin-left: 40px;
         }
         
         .nav-menu a {
-            color: white;
+            color: #6B6B6B;
             text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s;
+            font-size: 15px;
+            transition: color 0.3s ease;
+            letter-spacing: 1px;
+            font-weight: 300;
         }
         
         .nav-menu a:hover {
-            color: #ff6b6b;
+            color: #8B7355;
         }
         
         .user-area {
@@ -68,66 +83,114 @@
             align-items: center;
         }
         
-        .user-area a {
-            color: white;
+        .nav-link {
+            color: #6B6B6B;
             text-decoration: none;
-            margin-left: 20px;
+            margin-left: 25px;
             font-size: 14px;
-            transition: color 0.3s;
+            transition: color 0.3s ease;
+            letter-spacing: 0.5px;
         }
         
-        .user-area a:hover {
-            color: #ff6b6b;
+        .nav-link:hover {
+            color: #8B7355;
+        }
+        
+        .nav-btn {
+            padding: 10px 24px;
+            border-radius: 2px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Georgia', 'Noto Serif SC', serif;
+        }
+        
+        .nav-btn-primary {
+            background-color: #8B7355;
+            color: #FFFFFF;
+            border: 1px solid #8B7355;
+        }
+        
+        .nav-btn-primary:hover {
+            background-color: #6B5B45;
+            color: #FFFFFF;
+            border-color: #6B5B45;
+            transform: translateY(-1px);
         }
         
         .login-btn {
-            background-color: #8B4513;
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-weight: bold;
+            background-color: #8B7355;
+            color: #FFFFFF;
+            padding: 10px 24px;
+            border-radius: 2px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Georgia', 'Noto Serif SC', serif;
         }
         
         .login-btn:hover {
-            background-color: #6B3410;
+            background-color: #6B5B45;
+            color: #FFFFFF;
+            transform: translateY(-1px);
         }
         
         .user-dropdown {
             position: relative;
-            margin-left: 20px;
+            margin-left: 25px;
             display: inline-block;
             z-index: 1001;
         }
         
         .user-avatar {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            background-color: #ff6b6b;
-            color: white;
+            background-color: #8B7355;
+            color: #FAF8F5;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-weight: 400;
             cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .user-avatar:hover {
+            background-color: #6B5B45;
+            transform: scale(1.05);
         }
         
         .dropdown-menu {
             position: absolute;
             top: 100%;
             right: 0;
-            background-color: white;
-            color: #000;
-            min-width: 120px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background-color: #FAF8F5;
+            color: #4A4A4A;
+            min-width: 200px;
+            box-shadow: 0 4px 30px rgba(139, 115, 85, 0.15);
             border-radius: 4px;
-            padding: 5px 0;
-            margin-top: 5px;
+            padding: 8px 0;
+            margin-top: 12px;
             visibility: hidden;
             opacity: 0;
             z-index: 9999;
             overflow: hidden;
-            transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+            transition: all 0.3s ease;
+            transform: translateY(-10px);
             pointer-events: none;
+            border: 1px solid rgba(139, 115, 85, 0.1);
         }
         
         .dropdown-menu.show {
@@ -140,22 +203,22 @@
         .user-info {
             display: flex;
             align-items: center;
-            padding: 16px;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 20px;
+            border-bottom: 1px solid rgba(139, 115, 85, 0.1);
         }
         
         .user-avatar-large {
-            width: 48px;
-            height: 48px;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
-            background-color: #3498db;
+            background-color: #8B7355;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 20px;
-            margin-right: 12px;
+            color: #FAF8F5;
+            font-weight: 400;
+            font-size: 22px;
+            margin-right: 14px;
         }
         
         .user-details {
@@ -163,35 +226,40 @@
         }
         
         .user-name {
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 400;
+            font-size: 15px;
             margin-bottom: 4px;
+            color: #4A4A4A;
+            letter-spacing: 0.5px;
         }
         
         .user-email {
-            font-size: 12px;
-            color: #666;
+            font-size: 13px;
+            color: #8B8B8B;
         }
         
         .menu-divider {
             height: 1px;
-            background-color: #f0f0f0;
+            background-color: rgba(139, 115, 85, 0.1);
+            margin: 4px 0;
         }
         
         .dropdown-menu .menu-item {
             display: block;
-            padding: 8px 16px;
-            color: #000 !important;
+            padding: 12px 24px;
+            color: #6B6B6B !important;
             text-decoration: none;
             font-size: 14px;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
             margin: 0;
             box-sizing: border-box;
-            text-align: center;
+            text-align: left;
+            letter-spacing: 0.5px;
         }
         
         .dropdown-menu .menu-item:hover {
-            background-color: #f5f5f5;
+            background-color: rgba(139, 115, 85, 0.08);
+            color: #8B7355 !important;
         }
         
         .dropdown-menu form {
@@ -202,21 +270,23 @@
         .logout-btn {
             display: block;
             width: 100%;
-            padding: 8px 16px;
-            color: #000;
+            padding: 12px 24px;
+            color: #6B6B6B;
             text-decoration: none;
             font-size: 14px;
             background: none;
             border: none;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
             margin: 0;
             box-sizing: border-box;
-            text-align: center;
+            text-align: left;
+            letter-spacing: 0.5px;
         }
         
         .logout-btn:hover {
-            background-color: #f5f5f5;
+            background-color: rgba(139, 115, 85, 0.08);
+            color: #8B7355;
         }
         
         /* 轮播图 */
@@ -233,17 +303,29 @@
             width: 100%;
             height: 100%;
             opacity: 0;
-            transition: opacity 1s ease-in-out;
+            transition: opacity 1.2s ease-in-out;
         }
         
         .carousel-slide.active {
             opacity: 1;
         }
         
+        .carousel-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(139, 115, 85, 0.3) 0%, rgba(250, 248, 245, 0.1) 100%);
+            z-index: 1;
+        }
+        
         .carousel-slide img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            filter: brightness(0.95) contrast(1.05);
         }
         
         .carousel-content {
@@ -252,65 +334,78 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            color: white;
+            color: #FAF8F5;
             z-index: 10;
+            max-width: 800px;
+            padding: 0 40px;
         }
         
         .carousel-content h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 56px;
+            margin-bottom: 24px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            font-weight: 300;
+            letter-spacing: 2px;
+            line-height: 1.3;
         }
         
         .carousel-content p {
-            font-size: 18px;
-            margin-bottom: 30px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            font-size: 20px;
+            margin-bottom: 40px;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 300;
+            letter-spacing: 1px;
+            line-height: 1.8;
         }
         
         .carousel-btn {
-            background-color: #8B4513;
-            color: white;
+            background-color: #8B7355;
+            color: #FAF8F5;
             border: none;
-            padding: 12px 24px;
-            border-radius: 4px;
+            padding: 16px 48px;
+            border-radius: 2px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 400;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.4s ease;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
         
         .carousel-btn:hover {
-            background-color: #6B3410;
+            background-color: #6B5B45;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 115, 85, 0.3);
         }
         
         .carousel-indicators {
             position: absolute;
-            bottom: 30px;
+            bottom: 50px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 10px;
+            gap: 16px;
             z-index: 10;
         }
         
         .indicator {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.5);
+            background-color: rgba(250, 248, 245, 0.4);
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
         }
         
         .indicator.active {
-            background-color: white;
+            background-color: #FAF8F5;
+            transform: scale(1.3);
         }
         
         /* 街舞分类展示区 */
         .categories {
-            padding: 80px 20px;
-            background-color: #f9f9f9;
+            padding: 120px 40px;
+            background-color: #FAF8F5;
         }
         
         .container {
@@ -320,41 +415,46 @@
         
         .section-title {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 80px;
         }
         
         .section-title h2 {
-            font-size: 36px;
-            color: #333;
-            margin-bottom: 10px;
+            font-size: 42px;
+            color: #4A4A4A;
+            margin-bottom: 16px;
+            font-weight: 300;
+            letter-spacing: 2px;
         }
         
         .section-title p {
-            font-size: 16px;
-            color: #666;
+            font-size: 17px;
+            color: #8B8B8B;
+            font-weight: 300;
+            letter-spacing: 0.5px;
         }
         
         .categories-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
         }
         
         .category-card {
-            background-color: white;
-            border-radius: 8px;
+            background-color: #FFFFFF;
+            border-radius: 2px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 20px rgba(139, 115, 85, 0.08);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(139, 115, 85, 0.05);
         }
         
         .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(139, 115, 85, 0.15);
         }
         
         .category-image {
-            height: 200px;
+            height: 240px;
             overflow: hidden;
         }
         
@@ -362,72 +462,81 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s;
+            transition: transform 0.6s ease;
+            filter: brightness(0.95) contrast(1.05);
         }
         
         .category-card:hover .category-image img {
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
         
         .category-content {
-            padding: 20px;
+            padding: 28px;
         }
         
         .category-content h3 {
-            font-size: 20px;
-            color: #333;
-            margin-bottom: 10px;
+            font-size: 22px;
+            color: #4A4A4A;
+            margin-bottom: 12px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
         }
         
         .category-content p {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 15px;
+            font-size: 15px;
+            color: #8B8B8B;
+            margin-bottom: 20px;
+            line-height: 1.7;
+            font-weight: 300;
         }
         
         .category-btn {
             display: inline-block;
-            background-color: #8B4513;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
+            background-color: transparent;
+            color: #8B7355;
+            padding: 12px 28px;
+            border-radius: 2px;
             font-size: 14px;
-            font-weight: bold;
+            font-weight: 400;
             text-decoration: none;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            border: 1px solid #8B7355;
         }
         
         .category-btn:hover {
-            background-color: #6B3410;
+            background-color: #8B7355;
+            color: #FAF8F5;
         }
         
         /* 最新活动/课程展示模块 */
         .events {
-            padding: 80px 20px;
-            background-color: white;
+            padding: 120px 40px;
+            background-color: #FFFFFF;
         }
         
         .events-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 40px;
         }
         
         .event-card {
-            background-color: #f9f9f9;
-            border-radius: 8px;
+            background-color: #FAF8F5;
+            border-radius: 2px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 20px rgba(139, 115, 85, 0.08);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(139, 115, 85, 0.05);
         }
         
         .event-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(139, 115, 85, 0.15);
         }
         
         .event-image {
-            height: 200px;
+            height: 240px;
             overflow: hidden;
         }
         
@@ -435,142 +544,78 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s;
+            transition: transform 0.6s ease;
+            filter: brightness(0.95) contrast(1.05);
         }
         
         .event-card:hover .event-image img {
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
         
         .event-content {
-            padding: 20px;
+            padding: 28px;
         }
         
         .event-date {
             font-size: 14px;
-            color: #8B4513;
-            font-weight: bold;
-            margin-bottom: 10px;
+            color: #8B7355;
+            font-weight: 400;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
         
         .event-content h3 {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 10px;
+            font-size: 20px;
+            color: #4A4A4A;
+            margin-bottom: 12px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
         }
         
         .event-content p {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 15px;
+            font-size: 15px;
+            color: #8B8B8B;
+            margin-bottom: 16px;
+            line-height: 1.7;
+            font-weight: 300;
         }
         
         .event-location {
             font-size: 14px;
-            color: #888;
-            margin-bottom: 15px;
+            color: #9B9B9B;
+            margin-bottom: 20px;
+            letter-spacing: 0.3px;
         }
         
         .event-btn {
             display: inline-block;
-            background-color: #8B4513;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
+            background-color: transparent;
+            color: #8B7355;
+            padding: 12px 28px;
+            border-radius: 2px;
             font-size: 14px;
-            font-weight: bold;
+            font-weight: 400;
             text-decoration: none;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            border: 1px solid #8B7355;
         }
         
         .event-btn:hover {
-            background-color: #6B3410;
-        }
-        
-        /* 页脚 */
-        .footer {
-            background-color: #333;
-            color: white;
-            padding: 60px 20px 30px;
-        }
-        
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-        
-        .footer-column h3 {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: #ff6b6b;
-        }
-        
-        .footer-column ul {
-            list-style: none;
-        }
-        
-        .footer-column ul li {
-            margin-bottom: 10px;
-        }
-        
-        .footer-column ul li a {
-            color: #ccc;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer-column ul li a:hover {
-            color: #ff6b6b;
-        }
-        
-        .footer-column p {
-            color: #ccc;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .social-links a {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        
-        .social-links a:hover {
-            background-color: #ff6b6b;
-            transform: translateY(-3px);
-        }
-        
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 30px;
-            text-align: center;
-            font-size: 14px;
-            color: #ccc;
+            background-color: #8B7355;
+            color: #FAF8F5;
         }
         
         /* 关于我们 */
         .about {
-            padding: 80px 20px;
-            background-color: #f9f9f9;
+            padding: 120px 40px;
+            background-color: #FAF8F5;
         }
         
         .about-content {
             display: flex;
-            gap: 40px;
+            gap: 60px;
             align-items: center;
         }
         
@@ -579,29 +624,119 @@
         }
         
         .about-text h3 {
-            font-size: 20px;
-            color: #333;
-            margin-bottom: 15px;
-            margin-top: 30px;
+            font-size: 24px;
+            color: #4A4A4A;
+            margin-bottom: 16px;
+            margin-top: 36px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+        
+        .about-text h3:first-child {
+            margin-top: 0;
         }
         
         .about-text p {
             font-size: 16px;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 20px;
+            color: #8B8B8B;
+            line-height: 1.9;
+            margin-bottom: 24px;
+            font-weight: 300;
         }
         
         .about-image {
             flex: 1;
-            max-width: 500px;
+            max-width: 550px;
         }
         
         .about-image img {
             width: 100%;
             height: auto;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 2px;
+            box-shadow: 0 4px 30px rgba(139, 115, 85, 0.12);
+            filter: brightness(0.95) contrast(1.05);
+        }
+        
+        /* 页脚 */
+        .footer {
+            background-color: #4A4A4A;
+            color: #FAF8F5;
+            padding: 80px 40px 40px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 24px;
+            color: #D4C4A8;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column ul li a {
+            color: #C8C8C8;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 300;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #D4C4A8;
+        }
+        
+        .footer-column p {
+            color: #C8C8C8;
+            font-size: 15px;
+            line-height: 1.9;
+            font-weight: 300;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+        }
+        
+        .social-links a {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: rgba(250, 248, 245, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FAF8F5;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+        
+        .social-links a:hover {
+            background-color: #8B7355;
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(250, 248, 245, 0.1);
+            padding-top: 32px;
+            text-align: center;
+            font-size: 14px;
+            color: #A8A8A8;
+            font-weight: 300;
+            letter-spacing: 0.3px;
         }
         
         /* 响应式设计 */
@@ -611,7 +746,7 @@
             }
             
             .carousel-content h1 {
-                font-size: 32px;
+                font-size: 36px;
             }
             
             .carousel-content p {
@@ -619,13 +754,13 @@
             }
             
             .section-title h2 {
-                font-size: 28px;
+                font-size: 32px;
             }
             
             .categories,
             .events,
             .about {
-                padding: 60px 20px;
+                padding: 80px 20px;
             }
             
             .about-content {
@@ -636,68 +771,76 @@
             .about-image {
                 max-width: 100%;
             }
+            
+            .nav-container {
+                padding: 0 20px;
+            }
         }
         
         @media (max-width: 480px) {
             .carousel-content h1 {
-                font-size: 24px;
+                font-size: 28px;
             }
             
             .carousel-content p {
-                font-size: 14px;
+                font-size: 15px;
             }
             
             .section-title h2 {
-                font-size: 24px;
+                font-size: 28px;
             }
             
             .categories-grid,
             .events-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .carousel-btn {
+                padding: 14px 36px;
+                font-size: 14px;
+            }
         }
-  </style>
+    </style>
+</head>
+<body>
     <!-- 导航栏 -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="#" class="logo">IN ONE</a>
+            <a href="<%= root_path %>" class="logo">Street Axis</a>
             
             <ul class="nav-menu">
-                <li><a href="#home">首页</a></li>
-                <li><a href="#categories">街舞分类</a></li>
-                <li><a href="#events">最新活动</a></li>
-                <li><a href="#about">关于我们</a></li>
-                <li><a href="#contact">联系我们</a></li>
+                <li><%= link_to "首页", root_path %></li>
+                <li><%= link_to "街舞分类", categories_path %></li>
+                <li><%= link_to "最新活动", events_path %></li>
+                <li><%= link_to "关于我们", about_path %></li>
+                <li><%= link_to "联系我们", contact_path %></li>
             </ul>
             
-            <div class="user-area" id="user-area">
-                <!-- 未登录状态 -->
+            <div class="user-area">
                 <% if !user_signed_in? %>
-                <div id="guest-state">
-                    <a href="<%= new_user_registration_path %>">注册</a>
-                    <a href="<%= new_user_session_path %>" class="login-btn">登录</a>
-                </div>
+                <%= link_to "注册", new_user_registration_path, class: "nav-link" %>
+                <%= link_to "登录", new_user_session_path, class: "login-btn" %>
                 <% else %>
-                <!-- 已登录状态 -->
-                <div id="user-state">
-                    <div class="user-dropdown">
-                        <div class="user-avatar" id="user-avatar"><%= current_user.email.first.upcase %></div>
-                        <div class="dropdown-menu">
-                            <div class="user-info">
-                                <div class="user-avatar-large"><%= current_user.email.first.upcase %></div>
-                                <div class="user-details">
-                                    <div class="user-name"><%= current_user.email.split('@').first %></div>
-                                    <div class="user-email"><%= current_user.email %></div>
-                                </div>
+                <div class="user-dropdown">
+                    <div class="user-avatar" id="user-avatar"><%= current_user.email.first.upcase %></div>
+                    <div class="dropdown-menu">
+                        <div class="user-info">
+                            <div class="user-avatar-large"><%= current_user.email.first.upcase %></div>
+                            <div class="user-details">
+                                <div class="user-name"><%= current_user.email.split('@').first %></div>
+                                <div class="user-email"><%= current_user.email %></div>
                             </div>
-                            <div class="menu-divider"></div>
-                            <a href="<%= user_profile_path %>" class="menu-item">个人中心</a>
-                            <a href="<%= user_courses_path %>" class="menu-item">我的课程</a>
-                            <div class="menu-divider"></div>
-                            <%= form_for(current_user, as: :user, url: destroy_user_session_path, method: :delete) do |f| %>
-                                <button type="submit" class="menu-item logout-btn">退出登录</button>
-                            <% end %>
                         </div>
+                        <div class="menu-divider"></div>
+                        <a href="<%= user_profile_path %>" class="menu-item">个人中心</a>
+                        <a href="<%= user_courses_path %>" class="menu-item">我的课程</a>
+                        <% if current_user.is_admin? || current_user.role.present? %>
+                        <a href="<%= admin_root_path %>" class="menu-item">⚙️ 后台管理</a>
+                        <% end %>
+                        <div class="menu-divider"></div>
+                        <%= form_for(current_user, as: :user, url: destroy_user_session_path, method: :delete) do |f| %>
+                            <button type="submit" class="menu-item logout-btn">退出登录</button>
+                        <% end %>
                     </div>
                 </div>
                 <% end %>
@@ -849,7 +992,7 @@
                         <div class="event-date">2026年3月20日</div>
                         <h3>国际大师街舞工作坊</h3>
                         <p>邀请国际知名街舞大师，带来最前沿的舞蹈技巧和理念</p>
-                        <div class="event-location">地点：IN ONE 街舞工作室</div>
+                        <div class="event-location">地点：Street Axis 街舞工作室</div>
                         <a href="#" class="event-btn">预约席位</a>
                     </div>
                 </div>
@@ -860,7 +1003,7 @@
                     </div>
                     <div class="event-content">
                         <div class="event-date">2026年3月25日</div>
-                        <h3>IN ONE 街舞团年度公演</h3>
+                        <h3>Street Axis 街舞团年度公演</h3>
                         <p>展示我们学员和教师的精彩表演，呈现最专业的街舞作品</p>
                         <div class="event-location">地点：城市大剧院</div>
                         <a href="#" class="event-btn">购票观看</a>
@@ -875,19 +1018,19 @@
         <div class="container">
             <div class="section-title">
                 <h2>关于我们</h2>
-                <p>了解IN ONE街舞工作室的发展历程和教学理念</p>
+                <p>了解Street Axis街舞工作室的发展历程和教学理念</p>
             </div>
             
             <div class="about-content">
                 <div class="about-text">
                     <h3>我们的使命</h3>
-                    <p>IN ONE街舞工作室成立于2010年，是一家专业的街舞培训机构，致力于推广街舞文化，培养优秀的街舞人才。我们的使命是通过专业的教学和优质的服务，让每个人都能享受街舞的魅力，发现自己的潜能。</p>
+                    <p>Street Axis街舞工作室成立于2010年，是一家专业的街舞培训机构，致力于推广街舞文化，培养优秀的街舞人才。我们的使命是通过专业的教学和优质的服务，让每个人都能享受街舞的魅力，发现自己的潜能。</p>
                     
                     <h3>教学理念</h3>
                     <p>我们坚持"以学生为中心"的教学理念，根据每个学生的特点和需求，制定个性化的学习计划。我们的教师团队由经验丰富的专业舞者组成，他们不仅拥有扎实的舞蹈技巧，还具备丰富的教学经验，能够帮助学生快速提升舞技。</p>
                     
                     <h3>发展历程</h3>
-                    <p>2010年：IN ONE街舞工作室成立，开始提供街舞培训服务<br>
+                    <p>2010年：Street Axis街舞工作室成立，开始提供街舞培训服务<br>
                     2012年：开设第一家分店，扩大服务范围<br>
                     2015年：举办第一届街舞大赛，推动街舞文化发展<br>
                     2018年：与国际街舞大师合作，引入国际先进教学理念<br>
@@ -896,7 +1039,7 @@
                     2026年：继续扩大规模，推广街舞文化，为更多人提供专业的街舞培训服务</p>
                 </div>
                 <div class="about-image">
-                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=hip%20hop%20dance%20studio%2C%20modern%20facility%2C%20professional%20equipment%2C%20students%20practicing&image_size=landscape_4_3" alt="IN ONE街舞工作室">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=hip%20hop%20dance%20studio%2C%20modern%20facility%2C%20professional%20equipment%2C%20students%20practicing&image_size=landscape_4_3" alt="Street Axis街舞工作室">
                 </div>
             </div>
         </div>
@@ -907,7 +1050,7 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-column">
-                    <h3>IN ONE</h3>
+                    <h3>Street Axis</h3>
                     <p>专业的街舞培训机构，致力于推广街舞文化，培养优秀的街舞人才。我们提供最专业的课程和最优质的服务，让每个人都能享受街舞的魅力。</p>
                     <div class="social-links">
                         <a href="#">📘</a>
@@ -940,20 +1083,19 @@
                     <h3>订阅我们</h3>
                     <p>订阅我们的 newsletters，获取最新的活动信息和课程优惠</p>
                     <form>
-                        <input type="email" id="subscribe-email" name="subscribe-email" placeholder="请输入您的邮箱" style="width: 100%; padding: 10px; margin-top: 10px; border-radius: 4px; border: none;">
-                        <button type="submit" id="subscribe-button" name="subscribe-button" style="width: 100%; padding: 10px; margin-top: 10px; background-color: #8B4513; color: white; border: none; border-radius: 4px; cursor: pointer;">订阅</button>
+                        <input type="email" id="subscribe-email" name="subscribe-email" placeholder="请输入您的邮箱" style="width: 100%; padding: 14px 18px; margin-top: 16px; border-radius: 2px; border: 1px solid rgba(250, 248, 245, 0.2); background-color: rgba(250, 248, 245, 0.08); color: #FAF8F5; font-size: 14px; letter-spacing: 0.5px; transition: all 0.3s ease;">
+                        <button type="submit" id="subscribe-button" name="subscribe-button" style="width: 100%; padding: 14px 24px; margin-top: 16px; background-color: #8B7355; color: #FAF8F5; border: none; border-radius: 2px; cursor: pointer; font-size: 14px; letter-spacing: 1px; transition: all 0.3s ease; text-transform: uppercase;">订阅</button>
                     </form>
                 </div>
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2026 IN ONE 街舞. 保留所有权利.</p>
+                <p>&copy; 2026 Street Axis 街舞. 保留所有权利.</p>
             </div>
         </div>
     </footer>
     
     <script data-turbolinks-eval="false">
-        // 导航栏滚动效果
         window.addEventListener('scroll', function() {
             const navbar = document.getElementById('navbar');
             if (navbar && window.scrollY > 50) {
@@ -963,7 +1105,6 @@
             }
         });
         
-        // 轮播图功能
         function initCarousel() {
             let currentSlide = 0;
             const slides = document.querySelectorAll('.carousel-slide');
@@ -990,36 +1131,9 @@
                 showSlide(next);
             }
             
-            // 自动轮播
             setInterval(nextSlide, 5000);
         }
         
-        // 平滑滚动
-        function initSmoothScroll() {
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                // 跳过退出登录链接
-                if (anchor.id === 'logout-link') {
-                    return;
-                }
-                anchor.addEventListener('click', function(e) {
-                    const href = this.getAttribute('href');
-                    // 跳过href只是"#"的链接
-                    if (href === '#') {
-                        return;
-                    }
-                    e.preventDefault();
-                    const target = document.querySelector(href);
-                    if (target) {
-                        target.scrollIntoView({ 
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
-            });
-        }
-        
-        // 下拉菜单控制
         function initUserDropdown() {
             const userDropdown = document.querySelector('.user-dropdown');
             const dropdownMenu = document.querySelector('.dropdown-menu');
@@ -1027,13 +1141,11 @@
             let hoverTimeout;
             
             if (userDropdown && dropdownMenu) {
-                // 确保用户头像可聚焦
                 userDropdown.setAttribute('tabindex', '0');
                 userDropdown.setAttribute('role', 'button');
                 userDropdown.setAttribute('aria-haspopup', 'true');
                 userDropdown.setAttribute('aria-expanded', 'false');
                 
-                // 定义事件处理函数
                 function handleClick(e) {
                     e.stopPropagation();
                     isOpenByClick = !isOpenByClick;
@@ -1077,7 +1189,6 @@
                     }
                 }
                 
-                // 添加事件监听器
                 userDropdown.addEventListener('click', handleClick);
                 userDropdown.addEventListener('mouseenter', handleMouseEnter);
                 userDropdown.addEventListener('mouseleave', handleMouseLeave);
@@ -1088,36 +1199,28 @@
             }
         }
         
-        // 退出登录功能
         function initLogout() {
-            // 直接在DOM中查找退出登录按钮，确保即使在动态加载的内容中也能找到
             const logoutBtn = document.querySelector('.logout-btn');
             const logoutForm = document.querySelector('.dropdown-menu form');
             
             if (logoutBtn && logoutForm) {
-                // 定义事件处理函数
                 function handleLogoutClick(e) {
-                    // 阻止事件冒泡，确保不会触发userDropdown的点击事件
                     e.stopPropagation();
-                    
-                    // 提交表单，使用表单的默认行为
                     logoutForm.submit();
                 }
                 
-                // 添加点击事件监听器
                 logoutBtn.addEventListener('click', handleLogoutClick);
             }
         }
         
-        // 初始化所有功能
         function initPage() {
             initCarousel();
-            initSmoothScroll();
             initUserDropdown();
             initLogout();
         }
         
-        // 同时支持传统页面加载和Turbolinks
         document.addEventListener('DOMContentLoaded', initPage);
         document.addEventListener('turbolinks:load', initPage);
     </script>
+</body>
+</html>

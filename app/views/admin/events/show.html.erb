@@ -1,0 +1,37 @@
+<% content_for :title, '活动详情' %>
+
+<div class="card">
+  <div class="card-header">
+    <h3><%= @event.title %></h3>
+    <div>
+      <%= link_to '编辑', edit_admin_event_path(@event), class: 'btn btn-secondary' %>
+      <%= link_to '返回列表', admin_events_path, class: 'btn btn-primary' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>标题</label>
+    <p><%= @event.title %></p>
+  </div>
+  <div class="form-group">
+    <label>日期</label>
+    <p><%= @event.date.strftime('%Y年%m月%d日') %></p>
+  </div>
+  <div class="form-group">
+    <label>描述</label>
+    <p><%= @event.description %></p>
+  </div>
+  <% if @event.image.present? %>
+    <div class="form-group">
+      <label>图片</label>
+      <p><%= @event.image %></p>
+    </div>
+  <% end %>
+  <div class="form-group">
+    <label>创建时间</label>
+    <p><%= @event.created_at.strftime('%Y-%m-%d %H:%M:%S') %></p>
+  </div>
+  <div class="form-group">
+    <label>更新时间</label>
+    <p><%= @event.updated_at.strftime('%Y-%m-%d %H:%M:%S') %></p>
+  </div>
+</div>

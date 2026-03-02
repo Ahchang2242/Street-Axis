@@ -1,0 +1,45 @@
+<% content_for :title, '编辑联系我们' %>
+
+<div class="card">
+  <div class="card-header">
+    <h3>编辑联系我们</h3>
+  </div>
+  <%= form_for([:admin, @contact_info], url: admin_contact_info_path, html: { multipart: true }) do |f| %>
+    <% if @contact_info.errors.any? %>
+      <div class="alert alert-danger">
+        <h4><%= pluralize(@contact_info.errors.count, "error") %> 禁止该内容保存:</h4>
+        <ul>
+          <% @contact_info.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= f.label :address %>
+      <%= f.text_field :address, class: 'form-control', required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :phone %>
+      <%= f.text_field :phone, class: 'form-control', required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :email %>
+      <%= f.email_field :email, class: 'form-control', required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :business_hours %>
+      <%= f.text_area :business_hours, class: 'form-control', rows: 4, required: true %>
+    </div>
+
+    <%= render 'admin/shared/image_upload', f: f, object: @contact_info, remove_image_path: (@contact_info.persisted? ? remove_uploaded_image_admin_contact_info_path : nil) %>
+
+    <div class="form-actions">
+      <%= f.submit '保存', class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</div>

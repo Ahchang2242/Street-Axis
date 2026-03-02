@@ -1,0 +1,37 @@
+<% content_for :title, "角色详情 - #{@role.name}" %>
+
+<div class="card">
+  <div class="card-header">
+    <h3>角色信息</h3>
+    <div>
+      <%= link_to '编辑', edit_admin_role_path(@role), class: 'btn btn-primary' %>
+      <%= link_to '返回列表', admin_roles_path, class: 'btn btn-secondary' %>
+    </div>
+  </div>
+  <div class="grid grid-2">
+    <div>
+      <p><strong>名称:</strong> <%= @role.name %></p>
+      <p><strong>描述:</strong> <%= @role.description %></p>
+      <p><strong>状态:</strong> 
+        <span class="status-badge <%= @role.is_active ? 'status-active' : 'status-inactive' %>">
+          <%= @role.is_active ? '启用' : '禁用' %>
+        </span>
+      </p>
+    </div>
+    <div>
+      <p><strong>权限数量:</strong> <%= @role.permissions.count %></p>
+      <p><strong>用户数量:</strong> <%= @role.users.count %></p>
+      <p><strong>创建时间:</strong> <%= @role.created_at.strftime('%Y-%m-%d %H:%M') %></p>
+    </div>
+  </div>
+  <% if @role.permissions.any? %>
+    <div style="margin-top: 20px;">
+      <h4>权限列表</h4>
+      <ul>
+        <% @role.permissions.each do |perm| %>
+          <li><%= perm.name %> (<%= perm.resource %> - <%= perm.action %>)</li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+</div>

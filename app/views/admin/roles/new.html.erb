@@ -1,0 +1,9 @@
+<% content_for :title, '新建角色' %>
+
+<div class="card">
+  <div class="card-header">
+    <h3>新建角色</h3>
+    <%= link_to '返回列表', admin_roles_path, class: 'btn btn-secondary' %>
+  </div>
+  <%= render 'form', role: @role, permissions: @permissions %>
+</div>

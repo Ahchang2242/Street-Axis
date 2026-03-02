@@ -1,0 +1,28 @@
+<% content_for :title, "日志详情 - ##{@log.id}" %>
+
+<div class="card">
+  <div class="card-header">
+    <h3>日志详情</h3>
+    <%= link_to '返回列表', admin_operation_logs_path, class: 'btn btn-secondary' %>
+  </div>
+  <div class="grid grid-2">
+    <div>
+      <p><strong>ID:</strong> <%= @log.id %></p>
+      <p><strong>操作人:</strong> <%= @log.user&.username || '系统' %></p>
+      <p><strong>操作类型:</strong> <%= @log.action %></p>
+      <p><strong>资源类型:</strong> <%= @log.resource_type || '-' %></p>
+      <p><strong>资源ID:</strong> <%= @log.resource_id || '-' %></p>
+    </div>
+    <div>
+      <p><strong>IP地址:</strong> <%= @log.ip_address || '-' %></p>
+      <p><strong>User Agent:</strong> <%= @log.user_agent || '-' %></p>
+      <p><strong>创建时间:</strong> <%= @log.created_at.strftime('%Y-%m-%d %H:%M:%S') %></p>
+    </div>
+  </div>
+  <% if @log.details.present? %>
+    <div style="margin-top: 20px;">
+      <h4>详细信息</h4>
+      <pre><%= @log.details %></pre>
+    </div>
+  <% end %>
+</div>

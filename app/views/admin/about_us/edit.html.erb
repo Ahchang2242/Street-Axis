@@ -1,0 +1,35 @@
+<% content_for :title, '编辑关于我们' %>
+
+<div class="card">
+  <div class="card-header">
+    <h3>编辑关于我们</h3>
+  </div>
+  <%= form_for([:admin, @about_us], url: admin_about_us_path, html: { multipart: true }) do |f| %>
+    <% if @about_us.errors.any? %>
+      <div class="alert alert-danger">
+        <h4><%= pluralize(@about_us.errors.count, "error") %> 禁止该内容保存:</h4>
+        <ul>
+          <% @about_us.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= f.label :mission %>
+      <%= f.text_area :mission, class: 'form-control', rows: 6, required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :teaching_philosophy %>
+      <%= f.text_area :teaching_philosophy, class: 'form-control', rows: 6, required: true %>
+    </div>
+
+    <%= render 'admin/shared/image_upload', f: f, object: @about_us, remove_image_path: (@about_us.persisted? ? remove_uploaded_image_admin_about_us_path : nil) %>
+
+    <div class="form-actions">
+      <%= f.submit '保存', class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</div>
