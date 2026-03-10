@@ -1,0 +1,90 @@
+image: docker:24
+
+services:
+  - docker:24-dind
+
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+
+stages:
+  - build
+  - deploy
+
+# -----------------------------
+# Login ACR (personal edition)
+# -----------------------------
+.acr_login: &acr_login
+  before_script:
+    - echo "$ACR_PASSWORD" | docker login $ACR_DOMAIN_PUBLIC -u "$ACR_USERNAME" --password-stdin
+
+# -----------------------------
+# Build Template
+# -----------------------------
+.build_template:
+  stage: build
+  <<: *acr_login
+  script:
+    - IMAGE=$ACR_DOMAIN_PUBLIC/$TARGET_IMAGE_PATH
+    - docker build -t $IMAGE:$CI_COMMIT_SHA .
+    - docker tag $IMAGE:$CI_COMMIT_SHA $IMAGE:latest
+    - docker push $IMAGE:$CI_COMMIT_SHA
+    - docker push $IMAGE:latest
+
+# -----------------------------
+# Deploy Template
+# -----------------------------
+.deploy_template:
+  stage: deploy
+  image: alpine:3.20
+  before_script:
+    - apk add --no-cache curl tar
+    - curl https://aliyuncli.alicdn.com/aliyun-cli-linux-latest-amd64.tgz -o aliyun.tgz
+    - tar xzf aliyun.tgz
+    - mv aliyun /usr/local/bin/
+    - aliyun configure set \
+        --access-key-id $ALIYUN_ACCESS_KEY_ID \
+        --access-key-secret $ALIYUN_SECRET_ACCESS_KEY \
+        --region $ALIBABA_CLOUD_REGION_ID
+  script:
+    - IMAGE=$ACR_DOMAIN_VPC/$TARGET_IMAGE_PATH:latest
+    - aliyun sae DeployApplication \
+        --AppId $TARGET_APP_ID \
+        --ImageUrl $IMAGE \
+        --region $ALIBABA_CLOUD_REGION_ID
+
+# -----------------------------
+# UAT
+# -----------------------------
+build_uat:
+  extends: .build_template
+  variables:
+    TARGET_IMAGE_PATH: $IMAGE_PATH_UAT
+  only:
+    - /^uat-.*$/
+
+deploy_uat:
+  extends: .deploy_template
+  variables:
+    TARGET_IMAGE_PATH: $IMAGE_PATH_UAT
+    TARGET_APP_ID: $SAE_APP_ID_UAT
+  only:
+    - /^uat-.*$/
+
+# -----------------------------
+# PROD
+# -----------------------------
+build_prod:
+  extends: .build_template
+  variables:
+    TARGET_IMAGE_PATH: $IMAGE_PATH_PROD
+  only:
+    - /^prod-.*$/
+
+deploy_prod:
+  extends: .deploy_template
+  variables:
+    TARGET_IMAGE_PATH: $IMAGE_PATH_PROD
+    TARGET_APP_ID: $SAE_APP_ID_PROD
+  only:
+    - /^prod-.*$/
