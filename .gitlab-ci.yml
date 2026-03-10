@@ -61,7 +61,7 @@ build_uat:
   variables:
     TARGET_IMAGE_PATH: $IMAGE_PATH_UAT
   only:
-    - /^uat-.*$/
+    - /^uat-ali-.*$/
 
 deploy_uat:
   extends: .deploy_template
@@ -69,7 +69,7 @@ deploy_uat:
     TARGET_IMAGE_PATH: $IMAGE_PATH_UAT
     TARGET_APP_ID: $SAE_APP_ID_UAT
   only:
-    - /^uat-.*$/
+    - /^uat-ali-.*$/
 
 # -----------------------------
 # PROD
@@ -79,7 +79,7 @@ build_prod:
   variables:
     TARGET_IMAGE_PATH: $IMAGE_PATH_PROD
   only:
-    - /^prod-.*$/
+    - /^prod-ali-.*$/
 
 deploy_prod:
   extends: .deploy_template
@@ -87,4 +87,4 @@ deploy_prod:
     TARGET_IMAGE_PATH: $IMAGE_PATH_PROD
     TARGET_APP_ID: $SAE_APP_ID_PROD
   only:
-    - /^prod-.*$/
+    - /^prod-ali-.*$/
