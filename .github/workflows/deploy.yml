@@ -1,0 +1,92 @@
+name: Build and Deploy to Alibaba Cloud SAE
+
+on:
+  push:
+    tags:
+      - 'uat-ali-*'
+      - 'prod-ali-*'
+
+env:
+  # 在 GitHub Repository Settings -> Secrets 中配置这些变量
+  ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+  ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+  ACR_DOMAIN_PUBLIC: ${{ secrets.ACR_DOMAIN_PUBLIC }}
+  ACR_DOMAIN_VPC: ${{ secrets.ACR_DOMAIN_VPC }}
+  ALIYUN_ACCESS_KEY_ID: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+  ALIYUN_SECRET_ACCESS_KEY: ${{ secrets.ALIYUN_SECRET_ACCESS_KEY }}
+  ALIBABA_CLOUD_REGION_ID: ${{ secrets.ALIBABA_CLOUD_REGION_ID }}
+  # 镜像路径和 AppID（也可以放入 Secrets 或根据环境逻辑动态设置）
+  IMAGE_PATH_UAT: ${{ secrets.IMAGE_PATH_UAT }}
+  IMAGE_PATH_PROD: ${{ secrets.IMAGE_PATH_PROD }}
+  SAE_APP_ID_UAT: ${{ secrets.SAE_APP_ID_UAT }}
+  SAE_APP_ID_PROD: ${{ secrets.SAE_APP_ID_PROD }}
+
+jobs:
+  setup-env:
+    runs-on: ubuntu-latest
+    outputs:
+      env_name: ${{ steps.set-env.outputs.env_name }}
+      target_image_path: ${{ steps.set-env.outputs.target_image_path }}
+      target_app_id: ${{ steps.set-env.outputs.target_app_id }}
+    steps:
+      - id: set-env
+        run: |
+          if [[ $GITHUB_REF == refs/tags/uat-ali-* ]]; then
+            echo "env_name=uat" >> $GITHUB_OUTPUT
+            echo "target_image_path=$IMAGE_PATH_UAT" >> $GITHUB_OUTPUT
+            echo "target_app_id=$SAE_APP_ID_UAT" >> $GITHUB_OUTPUT
+          elif [[ $GITHUB_REF == refs/tags/prod-ali-* ]]; then
+            echo "env_name=prod" >> $GITHUB_OUTPUT
+            echo "target_image_path=$IMAGE_PATH_PROD" >> $GITHUB_OUTPUT
+            echo "target_app_id=$SAE_APP_ID_PROD" >> $GITHUB_OUTPUT
+          fi
+
+  build:
+    needs: setup-env
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to ACR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.ACR_DOMAIN_PUBLIC }}
+          username: ${{ env.AC_USERNAME }}
+          password: ${{ env.ACR_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        run: |
+          IMAGE=${{ env.ACR_DOMAIN_PUBLIC }}/${{ needs.setup-env.outputs.target_image_path }}
+          SHA_TAG=${GITHUB_SHA}
+          
+          docker build -t $IMAGE:$SHA_TAG .
+          docker tag $IMAGE:$SHA_TAG $IMAGE:latest
+          
+          docker push $IMAGE:$SHA_TAG
+          docker push $IMAGE:latest
+
+  deploy:
+    needs: [setup-env, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Aliyun CLI
+        run: |
+          curl https://aliyuncli.alicdn.com/aliyun-cli-linux-latest-amd64.tgz -o aliyun.tgz
+          tar xzf aliyun.tgz
+          sudo mv aliyun /usr/local/bin/
+
+      - name: Configure Aliyun CLI
+        run: |
+          aliyun configure set \
+            --access-key-id ${{ env.ALIYUN_ACCESS_KEY_ID }} \
+            --access-key-secret ${{ env.ALIYUN_SECRET_ACCESS_KEY }} \
+            --region ${{ env.ALIBABA_CLOUD_REGION_ID }}
+
+      - name: Deploy to SAE
+        run: |
+          IMAGE=${{ env.ACR_DOMAIN_VPC }}/${{ needs.setup-env.outputs.target_image_path }}:latest
+          aliyun sae DeployApplication \
+            --AppId ${{ needs.setup-env.outputs.target_app_id }} \
+            --ImageUrl $IMAGE \
+            --region ${{ env.ALIBABA_CLOUD_REGION_ID }}
