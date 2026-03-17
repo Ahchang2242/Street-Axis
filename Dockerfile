@@ -2,13 +2,7 @@
 FROM ruby:3.4.5-alpine3.22
 
 # 安装系统依赖
-RUN apk update && apk add --no-cache \
-  build-base \
-  mysql-dev \
-  nodejs \
-  npm \
-  tzdata \
-  && rm -rf /var/cache/apk/*
+RUN apk add --no-cache build-base mysql-dev nodejs npm tzdata
 
 # 设置工作目录
 WORKDIR /app
